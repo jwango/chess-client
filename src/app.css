@@ -1,0 +1,4 @@
+.gutters {
+  @apply px-2;
+  @apply md:px-8;
+}

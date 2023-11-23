@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  a {
+    color: theme('colors.blue.500');
+  }
+
+  td {
+    padding: 0 theme('spacing.2');
+  }
+
+  label {
+    font-size: theme('fontSize.sm');
+  }
+
+  input {
+    display: block;
+  }
+
+  button, [type='button'], [type='reset'], [type='submit'] {
+    border-radius: theme('borderRadius.sm');
+    background-color: theme('colors.blue.300');
+    padding: theme('spacing.1') theme('spacing.2');
+    min-width: 64px;
+
+    @apply shadow-sm;
+  }
+
+  button:hover {
+    background-color: theme('colors.blue.400');
+  }
+}
