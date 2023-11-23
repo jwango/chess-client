@@ -11,6 +11,16 @@
 * Develop via `yarn start`
 * Build for production via `yarn build` - make sure `NODE_ENV=production`
 
+## Configuration
+
+Environment Variables
+
+| Variable Name        | Usage (* = required)                           | Example                       |
+| -------------------- | ---------------------------------------------- | ----------------------------- |
+| COGNITO_CLIENT_ID    | *Cognito User Pool App Client Id               | 3rsrgovgffhrtrcvstlc83pk5s    |
+| COGNITO_DOMAIN       | *Cognito User Pool Auth Domain                 | https://auth.chess.jwango.com |
+| COGNITO_REDIRECT_URI | *Cognito User Pool App Client Allowed Callback | http://localhost:3000/login   |
+
 ## Misc.
 
 App goals

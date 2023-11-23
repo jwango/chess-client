@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -58,7 +59,12 @@ module.exports = {
       title: 'Development',
       template: "./src/index.html",
       filename: "./index.html"
-    })
+    }),
+    new webpack.EnvironmentPlugin([
+      'COGNITO_CLIENT_ID',
+      'COGNITO_DOMAIN',
+      'COGNITO_REDIRECT_URI'
+    ])
   ],
   resolve: {
     alias: {
