@@ -1,4 +1,4 @@
-# Garden Sketch
+# Chess Client
 
 ## Setup
 
