@@ -3,7 +3,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import "./tailwind.css";
 import App from './app';
-import { CarriagePage, HomePage, LoginPage } from '@home';
+import { LoginPage } from '@auth';
+import { CarriagePage, HomePage } from '@home';
 
 
 const router = createBrowserRouter([

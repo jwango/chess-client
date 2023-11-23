@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { buildLoginUrl } from "@shared/lib";
 import { getEnv } from "@shared";
-import { buildHomeApi } from "./api";
+import { authApi } from "./api/auth.api";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
@@ -16,7 +16,6 @@ export const LoginPage = () => {
     redirectUri: COGNITO_REDIRECT_URI
   });
   const code = searchParams.get("code");
-  const homeApi = buildHomeApi();
 
   function startLogin() {
     window.location.replace(loginUrl);
@@ -26,7 +25,7 @@ export const LoginPage = () => {
     if (!getHasCode(code)) {
       startLogin();
     } else {
-      homeApi.exchangeCodeForToken(code)
+      authApi.exchangeCodeForToken(code)
         .then(({ id_token }) => {
           setToken(id_token);
         })

@@ -9,6 +9,7 @@
     "noImplicitAny": true,
     "outDir": "./dist/",
     "paths": {
+      "@auth": ["src/modules/auth/index.ts"],
       "@shared": ["src/shared/index.ts"],
       "@shared/lib": ["src/shared/lib/index.ts"],
       "@home": ["src/modules/home/index.ts"],

@@ -68,6 +68,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
+      "@auth$": path.resolve(__dirname, "./src/modules/auth/index.ts"),
       "@shared$": path.resolve(__dirname, "./src/shared/index.ts"),
       "@shared/lib$": path.resolve(__dirname, "./src/shared/lib/index.ts"),
       "@home$": path.resolve(__dirname, "./src/modules/home/index.ts"),
