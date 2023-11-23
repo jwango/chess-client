@@ -6,9 +6,8 @@ interface EnvConfig {
 
 export function getEnv(): EnvConfig {
   return {
-    COGNITO_CLIENT_ID: "3rsrgovgffhrtrcvstlc83pk5s",
-    COGNITO_DOMAIN: "https://auth.chess.jwango.com",
-    // COGNITO_REDIRECT_URI: "http://localhost:3000/login"
-    COGNITO_REDIRECT_URI: "https://chess.jwango.com"
+    COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
+    COGNITO_DOMAIN: process.env.COGNITO_DOMAIN,
+    COGNITO_REDIRECT_URI: process.env.COGNITO_REDIRECT_URI
   };
 }

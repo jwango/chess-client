@@ -1,10 +1,11 @@
 {
-  "name": "garden-sketch",
+  "name": "chess-client",
   "version": "1.0.0",
   "description": "",
   "main": "index.tsx",
   "scripts": {
-    "build": "webpack -c ./webpack.prod.config.js",
+    "build": "NODE_ENV=production && webpack -c ./webpack.prod.config.js",
+    "local-env": "dotenv -e local.env",
     "start": "webpack serve -c ./webpack.local.config.js --progress \"profile\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -43,6 +44,7 @@
     "webpack-server": "^0.1.2"
   },
   "devDependencies": {
+    "dotenv-cli": "^7.3.0",
     "webpack-dev-server": "^4.13.2"
   },
   "browserslist": [
