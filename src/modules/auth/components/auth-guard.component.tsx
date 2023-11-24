@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { useAuth } from "../lib/auth.provider";
+import { useAuth } from "../lib/useAuth.hook";
 
 export const AuthGuard = ({ children }: PropsWithChildren<{}>) => {
   const { isLoggedIn, login } = useAuth();

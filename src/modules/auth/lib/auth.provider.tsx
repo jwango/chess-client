@@ -18,7 +18,7 @@ const DEFAULT_STATE: AuthContextState = {
   login: () => {},
 };
 
-const AuthContext = createContext<AuthContextValue>({
+export const AuthContext = createContext<AuthContextValue>({
   ...DEFAULT_STATE,
   setAuthState: null,
 });
@@ -38,8 +38,4 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-}
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 }

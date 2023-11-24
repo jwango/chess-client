@@ -1,6 +1,7 @@
 import { getEnv } from '@shared';
 import axios from 'axios';
-import { useAuth } from '../lib/auth.provider';
+import { useContext } from 'react';
+import { AuthContext } from '../lib/auth.provider';
 
 interface AuthApi {
   exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody>;
@@ -34,7 +35,7 @@ export interface CognitoTokenResponseBody {
 export function useAuthApi(): AuthApi {
   const axiosInstance = axios.create();
   const { COGNITO_CLIENT_ID, COGNITO_DOMAIN, COGNITO_REDIRECT_URI } = getEnv();
-  const { isLoggedIn, tokenData } = useAuth();
+  const { isLoggedIn, tokenData } = useContext(AuthContext);
 
   async function exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody> {
     const tokenEndpoint = new URL('oauth2/token', COGNITO_DOMAIN);
