@@ -5,7 +5,7 @@ interface AuthApi {
   exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody>;
 }
 
-interface CognitoTokenResponseBody {
+export interface CognitoTokenResponseBody {
   id_token: string;
   access_token: string;
   refresh_token: string;

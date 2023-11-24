@@ -21,12 +21,12 @@ const router = createBrowserRouter([
             element: <CarriagePage />
           }
         ]
+      },
+      {
+        path: "login",
+        element: <LoginPage />
       }
     ]
-  },
-  {
-    path: "login",
-    element: <LoginPage />
   }
 ]);
 

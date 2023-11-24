@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { buildLoginUrl } from "@shared/lib";
 import { getEnv } from "@shared";
 import { authApi } from "./api/auth.api";
+import { useAuth } from "./lib/auth.provider";
+import { buildLoginUrl } from "./lib/util";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
-  const [ token, setToken ] = useState<string>(null);
+  const { token, setAuthState} = useAuth();
 
   // Load shared state
   const { COGNITO_CLIENT_ID, COGNITO_DOMAIN, COGNITO_REDIRECT_URI } = getEnv();
@@ -26,8 +27,10 @@ export const LoginPage = () => {
       startLogin();
     } else {
       authApi.exchangeCodeForToken(code)
-        .then(({ id_token }) => {
-          setToken(id_token);
+        .then((tokenPayload) => {
+          setAuthState(prev => { 
+            return {...prev, isLoggedIn: true, token: tokenPayload }
+          });
         })
         .catch(() => startLogin());
     }
@@ -40,7 +43,7 @@ export const LoginPage = () => {
   return <div className="gutters">
     {!hasCode  && <p>Redirecting you to {loginUrl.toString()}...</p>}
     {(hasCode && !token) && <p>Exchanging your code {code} for a token...</p>}
-    {token && <pre className="whitespace-normal break-words">{token}</pre>}
+    {token && <pre className="whitespace-normal break-words">{token.id_token}</pre>}
   </div>;
 };
 
