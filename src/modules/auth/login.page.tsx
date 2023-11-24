@@ -3,30 +3,31 @@ import { useSearchParams } from "react-router-dom";
 import { UserInfo, useAuthApi } from "./api/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
 
-// TODO: use nonce and PKCE to prevent CSRF attacks
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
   const { exchangeCodeForToken, getUserInfo } = useAuthApi();
   const { tokenData, loginSilently, setAuthState, setIdentities } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo>(null);
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   // Load shared state
   const code = searchParams.get("code");
+  const state = searchParams.get("state");
 
   // Either grab a code or exchange the code for a token
   useEffect(() => {
     if (!getHasCode(code)) {
       loginSilently();
     } else {
-      exchangeCodeForToken(code)
+      exchangeCodeForToken(code, state)
         .then((tokenPayload) => {
           setAuthState(prev => { 
             return {...prev, isLoggedIn: true, tokenData: tokenPayload }
           });
         })
-        .catch(() => loginSilently());
+        .catch(() => setErrorMessage("Error logging in. Please ask your admin for help."));
     }
-  }, [code]);
+  }, [code, state]);
 
   // Once we have a valid token and are logged in, then grab the user info
   useEffect(() => {
@@ -44,6 +45,7 @@ export const LoginPage = () => {
 
   // Render
   return <div className="gutters">
+    {errorMessage && <p>{errorMessage}</p>}
     {!hasCode  && <p>Redirecting you to SSO login...</p>}
     {(hasCode && !tokenData) && <p>Exchanging your code {code} for a token...</p>}
     {tokenData && <pre className="whitespace-normal break-words">{tokenData.id_token}</pre>}

@@ -2,9 +2,10 @@ import { getEnv } from '@shared';
 import axios from 'axios';
 import { useContext } from 'react';
 import { AuthContext } from '../lib/auth.provider';
+import { getCodeVerifier } from '../lib/util';
 
 interface AuthApi {
-  exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody>;
+  exchangeCodeForToken(code: string, state: string): Promise<CognitoTokenResponseBody>;
   getUserInfo(): Promise<UserInfo>;
   revokeToken(): Promise<void>;
 }
@@ -38,13 +39,19 @@ export function useAuthApi(): AuthApi {
   const { COGNITO_CLIENT_ID, COGNITO_DOMAIN, COGNITO_REDIRECT_URI } = getEnv();
   const { isLoggedIn, tokenData } = useContext(AuthContext);
 
-  async function exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody> {
+  async function exchangeCodeForToken(code: string, state: string): Promise<CognitoTokenResponseBody> {
+    const codeVerifier = getCodeVerifier(state);
+    if (!codeVerifier) {
+      throw new TypeError("Invalid state");
+    }
+    console.log("got code verifier", codeVerifier);
     const tokenEndpoint = new URL('oauth2/token', COGNITO_DOMAIN);
     const requestBody = {
       grant_type: 'authorization_code',
       client_id: COGNITO_CLIENT_ID,
       code,
-      redirect_uri: COGNITO_REDIRECT_URI
+      redirect_uri: COGNITO_REDIRECT_URI,
+      code_verifier: codeVerifier
     };
     const axiosResponse = await axiosInstance.post(
       tokenEndpoint.toString(),
