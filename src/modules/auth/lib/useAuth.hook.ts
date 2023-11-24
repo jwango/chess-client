@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { AuthContext } from "./auth.provider";
-import { CognitoTokenResponseBody, UserIdentity } from "../api/auth.api";
+import { CognitoTokenResponseBody, UserIdentity, useAuthApi } from "../api/auth.api";
 import { buildCognitoAuthorizeUrl, buildCognitoLoginUrl } from "./util";
 
 const IDENTITY_LIST_STORAGE_KEY = "cognito.userInfo.identities";
 
 export const useAuth = () => {
   const authContext = useContext(AuthContext);
+  const authApi = useAuthApi();
 
   function getIdentities(): UserIdentity[] {
     return JSON.parse(localStorage.getItem(IDENTITY_LIST_STORAGE_KEY));
@@ -29,11 +30,24 @@ export const useAuth = () => {
     const authorizeUrl = buildCognitoAuthorizeUrl(idps[0].providerType);
     window.location.replace(authorizeUrl);
   }
+
+  function logout(): Promise<void> {
+    setIdentities(null);
+    return authApi.revokeToken()
+      .then(() => {
+        authContext.setAuthState(prev => ({
+          ...prev,
+          isLoggedIn: false,
+          tokenData: null
+        }));
+      });
+  }
   
   return {
     ...authContext,
     getIdentities,
     setIdentities,
-    loginSilently
+    loginSilently,
+    logout
   };
 }

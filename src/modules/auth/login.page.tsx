@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { UserInfo, useAuthApi } from "./api/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
 
+// TODO: use nonce and PKCE to prevent CSRF attacks
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
   const { exchangeCodeForToken, getUserInfo } = useAuthApi();

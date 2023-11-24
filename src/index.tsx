@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import "./tailwind.css";
 import App from './app';
-import { LoginPage } from '@auth';
+import { LoginPage, LogoutPage } from '@auth';
 import { CarriagePage, HomePage } from '@home';
 
 
@@ -25,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />
+      },
+      {
+        path: "logout",
+        element: <LogoutPage />
       }
     ]
   }

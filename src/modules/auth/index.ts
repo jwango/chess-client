@@ -6,3 +6,4 @@ export type { AuthContextValue} from './lib/auth.provider';
 export { AuthGuard } from './components/auth-guard.component';
 
 export { LoginPage } from './login.page';
+export { LogoutPage } from './logout.page';

@@ -6,6 +6,7 @@ import { AuthContext } from '../lib/auth.provider';
 interface AuthApi {
   exchangeCodeForToken(code: string): Promise<CognitoTokenResponseBody>;
   getUserInfo(): Promise<UserInfo>;
+  revokeToken(): Promise<void>;
 }
 
 export interface UserInfo {
@@ -65,9 +66,27 @@ export function useAuthApi(): AuthApi {
     return parseUserInfo(axiosResponse.data);
   }
 
+  async function revokeToken(): Promise<void> {
+    if (!tokenData) {
+      return;
+    }
+    const revokeEndpoint = new URL('oauth2/revoke', COGNITO_DOMAIN);
+    const requestBody = {
+      client_id: COGNITO_CLIENT_ID,
+      token: tokenData.refresh_token
+    };
+    await axiosInstance.post(
+      revokeEndpoint.toString(),
+      requestBody,
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+    return;
+  }
+
   return {
     exchangeCodeForToken,
-    getUserInfo
+    getUserInfo,
+    revokeToken
   };
 }
 

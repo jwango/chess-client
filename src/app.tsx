@@ -21,6 +21,7 @@ export const App = () => {
       <nav className="bg-primary-300 gutters py-1">
         <Link className="px-2 text-primary-300" to="/">Home</Link>
         <Link className="px-2 text-primary-300" to="/carriage">Carriage</Link>
+        <Link className="px-2 text-primary-300" to="/logout">Logout</Link>
 
         <label className="text-primary-300 absolute right-1 top-1">
           Theme&nbsp;
