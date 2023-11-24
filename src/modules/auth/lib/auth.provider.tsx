@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 interface AuthContextState {
   isLoggedIn: boolean;
-  token: CognitoTokenResponseBody;
+  tokenData: CognitoTokenResponseBody;
   login: () => void;
 }
 
@@ -14,7 +14,7 @@ export type AuthContextValue = AuthContextState & {
 
 const DEFAULT_STATE: AuthContextState = {
   isLoggedIn: false,
-  token: null,
+  tokenData: null,
   login: () => {},
 };
 

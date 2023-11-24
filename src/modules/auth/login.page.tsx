@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getEnv } from "@shared";
-import { authApi } from "./api/auth.api";
+import { UserInfo, useAuthApi } from "./api/auth.api";
 import { useAuth } from "./lib/auth.provider";
-import { buildLoginUrl } from "./lib/util";
+import { buildCognitoLoginUrl } from "./lib/util";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
-  const { token, setAuthState} = useAuth();
+  const { exchangeCodeForToken, getUserInfo } = useAuthApi();
+  const { tokenData, setAuthState} = useAuth();
+  const [userInfo, setUserInfo] = useState<UserInfo>(null);
 
   // Load shared state
-  const { COGNITO_CLIENT_ID, COGNITO_DOMAIN, COGNITO_REDIRECT_URI } = getEnv();
-  const loginUrl = buildLoginUrl({
-    clientId: COGNITO_CLIENT_ID,
-    domain: COGNITO_DOMAIN,
-    redirectUri: COGNITO_REDIRECT_URI
-  });
+  const loginUrl = buildCognitoLoginUrl();
   const code = searchParams.get("code");
 
   function startLogin() {
@@ -26,15 +22,22 @@ export const LoginPage = () => {
     if (!getHasCode(code)) {
       startLogin();
     } else {
-      authApi.exchangeCodeForToken(code)
+      exchangeCodeForToken(code)
         .then((tokenPayload) => {
           setAuthState(prev => { 
-            return {...prev, isLoggedIn: true, token: tokenPayload }
+            return {...prev, isLoggedIn: true, tokenData: tokenPayload }
           });
         })
         .catch(() => startLogin());
     }
   }, [code]);
+
+  useEffect(() => {
+    if (getHasCode(code) && tokenData && !userInfo) {
+      getUserInfo()
+        .then(setUserInfo);
+    }
+  }, [userInfo, tokenData, code]);
 
   // State just for rendering
   const hasCode = getHasCode(code);
@@ -42,8 +45,9 @@ export const LoginPage = () => {
   // Render
   return <div className="gutters">
     {!hasCode  && <p>Redirecting you to {loginUrl.toString()}...</p>}
-    {(hasCode && !token) && <p>Exchanging your code {code} for a token...</p>}
-    {token && <pre className="whitespace-normal break-words">{token.id_token}</pre>}
+    {(hasCode && !tokenData) && <p>Exchanging your code {code} for a token...</p>}
+    {tokenData && <pre className="whitespace-normal break-words">{tokenData.id_token}</pre>}
+    {userInfo && <pre>{JSON.stringify(userInfo, null, 2)}</pre>}
   </div>;
 };
 
