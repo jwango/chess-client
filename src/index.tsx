@@ -3,7 +3,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import "./tailwind.css";
 import App from './app';
-import { CarriagePage, HomePage, LoginPage } from '@home';
+import { LoginPage, LogoutPage } from '@auth';
+import { CarriagePage, HomePage } from '@home';
 
 
 const router = createBrowserRouter([
@@ -20,12 +21,16 @@ const router = createBrowserRouter([
             element: <CarriagePage />
           }
         ]
+      },
+      {
+        path: "login",
+        element: <LoginPage />
+      },
+      {
+        path: "logout",
+        element: <LogoutPage />
       }
     ]
-  },
-  {
-    path: "login",
-    element: <LoginPage />
   }
 ]);
 

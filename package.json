@@ -6,7 +6,8 @@
   "scripts": {
     "build": "NODE_ENV=production && webpack -c ./webpack.prod.config.js",
     "local-env": "dotenv -e local.env",
-    "start": "webpack serve -c ./webpack.local.config.js --progress \"profile\"",
+    "start": "yarn local-env yarn serve",
+    "serve": "webpack serve -c ./webpack.local.config.js --progress \"profile\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
