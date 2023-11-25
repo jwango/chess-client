@@ -3,6 +3,7 @@ import AuthGuard from "../auth/components/auth-guard.component";
 import { useListGamesQuery } from "./lib/chess.query";
 import { useToastState } from "@shared/lib";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export const LobbyPage = () => {
   const { data: gameIds, isLoading, isError, error, refetch } = useListGamesQuery();
@@ -24,7 +25,7 @@ export const LobbyPage = () => {
         {!isLoading && 
           <ul>
             {gameIds?.map(gameId => (
-              <li key={gameId}>{gameId}</li>
+              <li key={gameId}><Link to={`games/${gameId}`}>{gameId}</Link></li>
             ))}
           </ul>
         }

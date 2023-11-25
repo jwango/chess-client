@@ -6,6 +6,7 @@ import App from './app';
 import { LoginPage, LogoutPage } from '@auth';
 import { CarriagePage } from '@home';
 import { LobbyPage } from './modules/chess/Lobby.page';
+import { GamePage } from './modules/chess/Game.page';
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
             element: <CarriagePage />
           }
         ]
+      },
+      {
+        path: "games/:gameId",
+        element: <GamePage />
+
       },
       {
         path: "login",
