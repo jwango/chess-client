@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { UserInfo, useAuthApi } from "./api/auth.api";
+import { UserInfo, useAuthApi } from "./lib/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
 
 export const LoginPage = () => {

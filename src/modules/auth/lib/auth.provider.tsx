@@ -1,5 +1,5 @@
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react';
-import { CognitoTokenResponseBody } from '../api/auth.api';
+import { CognitoTokenResponseBody } from './auth.api';
 import { useNavigate } from 'react-router';
 
 interface AuthContextState {

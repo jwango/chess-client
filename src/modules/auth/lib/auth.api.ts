@@ -1,8 +1,8 @@
 import { getEnv } from '@shared';
 import axios from 'axios';
 import { useContext } from 'react';
-import { AuthContext } from '../lib/auth.provider';
-import { getCodeVerifier } from '../lib/util';
+import { AuthContext } from './auth.provider';
+import { getCodeVerifier } from './util';
 
 interface AuthApi {
   exchangeCodeForToken(code: string, state: string): Promise<CognitoTokenResponseBody>;
