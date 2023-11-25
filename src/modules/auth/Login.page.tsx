@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { UserInfo, useAuthApi } from "./lib/auth.api";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuthApi } from "./lib/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
   const { exchangeCodeForToken, getUserInfo } = useAuthApi();
-  const { tokenData, loginSilently, setAuthState, setIdentities } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo>(null);
+  const { tokenData, userInfo, loginSilently, setAuthState, setIdentities } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const navigate = useNavigate();
 
   // Load shared state
   const code = searchParams.get("code");
@@ -34,8 +34,9 @@ export const LoginPage = () => {
     if (getHasCode(code) && tokenData && !userInfo) {
       getUserInfo()
         .then(res => {
-          setUserInfo(res);
           setIdentities(res.identities);
+          setAuthState(prev => ({ ...prev, userInfo: res }));
+          navigate("/");
         });
     }
   }, [userInfo, tokenData, code]);
@@ -48,8 +49,7 @@ export const LoginPage = () => {
     {errorMessage && <p>{errorMessage}</p>}
     {!hasCode  && <p>Redirecting you to SSO login...</p>}
     {(hasCode && !tokenData) && <p>Exchanging your code {code} for a token...</p>}
-    {tokenData && <pre className="whitespace-normal break-words">{tokenData.id_token}</pre>}
-    {userInfo && <pre>{JSON.stringify(userInfo, null, 2)}</pre>}
+    {userInfo && <p>Welcome {userInfo.name}!</p>}
   </div>;
 };
 
