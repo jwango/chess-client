@@ -1,15 +1,18 @@
 import { useParams } from "react-router"
-import { useGetGameQuery, useGetPlayersQuery } from "./lib/chess.query";
+import { useGetGameQuery, useGetPlayersQuery } from "../lib/chess.query";
 import { useToastState } from "@shared/lib";
 import { useEffect } from "react";
-import AuthGuard from "../auth/components/auth-guard.component";
+import AuthGuard from "../../auth/components/auth-guard.component";
 import { Toast } from "@shared";
+import { Registration } from "./Registration";
 
 export const GamePage = () => {
   const { gameId } = useParams();
   const { data: gameInfo, isLoading: isLoadingGameInfo, error: errorGameInfo, isError: isErrorGameInfo } = useGetGameQuery(gameId);
   const { data: players, isLoading: isLoadingPlayers, error: errorPlayers, isError: isErrorPlayers } = useGetPlayersQuery(gameId);
   const { toastState, show } = useToastState();
+
+  const isLoadingData = isLoadingGameInfo || isLoadingPlayers;
 
   useEffect(() => {
     if (isErrorGameInfo) {
@@ -21,7 +24,8 @@ export const GamePage = () => {
     <Toast {...toastState} />
     <div className="gutters">
       <h1>Game {gameId}</h1>
-      <DebugQuery isLoading={isLoadingGameInfo} data={gameInfo} />
+      {isLoadingData && <p>Loading...</p>}
+      {!isLoadingGameInfo && gameInfo && <Registration gameInfo={gameInfo} players={players} />}
       <DebugQuery isLoading={isLoadingPlayers} data={players} />
     </div>
   </AuthGuard>

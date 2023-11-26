@@ -6,7 +6,7 @@ import App from './app';
 import { LoginPage, LogoutPage } from '@auth';
 import { CarriagePage } from '@home';
 import { LobbyPage } from './modules/chess/Lobby.page';
-import { GamePage } from './modules/chess/Game.page';
+import { GamePage } from './modules/chess/game/Game.page';
 
 
 const router = createBrowserRouter([

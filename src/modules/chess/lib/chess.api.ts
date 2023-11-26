@@ -1,5 +1,5 @@
 import { useAuth } from '@auth';
-import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse } from './dto';
+import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse, RegisterPlayerResponse, StartGameResponse } from './dto';
 import axios, { AxiosRequestConfig } from 'axios';
 import { CognitoTokenResponseBody } from 'src/modules/auth/lib/auth.api';
 
@@ -10,6 +10,8 @@ export interface ChessApi {
   getGameState(gameId: string): Promise<GetGameStateResponse['data']>;
   getPlayers(gameId: string): Promise<GetPlayersResponse['data']>;
   getMoves(gameId: string): Promise<GetMovesResponse['data']>;
+  registerMyself(gameId: string): Promise<RegisterPlayerResponse['data']>;
+  startGame(gameId: string): Promise<StartGameResponse['data']>;
 }
 
 export function useChessApi(): ChessApi {
@@ -48,17 +50,31 @@ export function useChessApi(): ChessApi {
     return axiosResponse.data?.data;
   }
 
+  async function registerMyself(gameId: string): Promise<RegisterPlayerResponse['data']>{
+    const config = { ...buildConfig(tokenData.id_token) };
+    const axiosResponse = await axiosInstance.post(`/games/${gameId}/players`, { userId: "myself" }, config);
+    return axiosResponse.data?.data;
+  }
+
+  async function startGame(gameId: string): Promise<RegisterPlayerResponse['data']>{
+    const config = { ...buildConfig(tokenData.id_token) };
+    const axiosResponse = await axiosInstance.post(`/games/${gameId}`, {}, config);
+    return axiosResponse.data?.data;
+  }
+
   return {
     listGames,
     getGame,
     getGameState,
     getPlayers,
-    getMoves
+    getMoves,
+    registerMyself,
+    startGame
   };
 }
 
 function buildConfig(token: string): AxiosRequestConfig {
   return {
-    headers: { Authorization: `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' }
   };
 }

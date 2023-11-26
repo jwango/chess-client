@@ -13,6 +13,10 @@ export type GetPlayersResponse = ResponseBody<GamePlayer[]>;
 
 export type GetMovesResponse = ResponseBody<GameMove[]>;
 
+export type RegisterPlayerResponse = ResponseBody<GameInfo>;
+
+export type StartGameResponse = ResponseBody<GameInfo>;
+
 export type GameStatus = 'RUNNING' | 'WAITING';
 
 export type GameMoveType = 'MOVE' | 'TAKE' | 'PROMOTION' | 'CASTLE';
@@ -40,6 +44,7 @@ export interface GameState {
 export interface GamePlayer {
   name: string;
   id: string;
+  userId: string;
 }
 
 export interface GameMove {
