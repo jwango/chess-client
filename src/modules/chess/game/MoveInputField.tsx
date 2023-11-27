@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { GameMove, GameSpace, PieceType } from "../lib/dto";
 import { Select, SelectOption } from "@shared";
+import { getPieceLetter } from "../lib/util";
 
 const CHAR_CODE_a = 97;
 
 interface MoveInputFieldProps {
   moves: GameMove[];
+  onSelect?: (move: GameMove) => void;
 }
 
 // Format of long algebraic notation
 type PieceIndex = string;
 
-export const MoveInputField = ({ moves }: MoveInputFieldProps) => {
+export const MoveInputField = ({ moves, onSelect }: MoveInputFieldProps) => {
   const [currPiece, setCurrPiece] = useState<PieceIndex>(null);
 
   const movesByPiece = getMovesByPiece(moves);
@@ -29,6 +31,10 @@ export const MoveInputField = ({ moves }: MoveInputFieldProps) => {
     setCurrPiece(pieceOption?.val || null);
   };
 
+  const handleSelectMove = (moveOption: SelectOption<GameMove>) => {
+    onSelect && onSelect(moveOption?.val);
+  };
+ 
   return <div className="flex flex-row gap-2">
     <label>
       Select a piece
@@ -36,7 +42,7 @@ export const MoveInputField = ({ moves }: MoveInputFieldProps) => {
     </label>
     <label>
       Select an action
-      <Select key={currPiece} options={moveOptions} placeholder='Click to select an action' />
+      <Select key={currPiece} options={moveOptions} placeholder='Click to select an action' onSelect={handleSelectMove} />
     </label>
   </div>;
 }
@@ -58,44 +64,6 @@ function getPieceIndex(pieceType: PieceType, space: GameSpace): PieceIndex {
   const pieceLetter = getPieceLetter(pieceType) || '➜';
   const spaceCoord = getSpaceCoord(space);
   return `${pieceLetter}${spaceCoord}`;
-}
-
-// https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
-function getPieceLetter(pieceType: PieceType): string {
-  switch (pieceType) {
-    case PieceType.BISHOP_WHITE:
-      return '♗';
-    case PieceType.BISHOP_BLACK:
-      return '♝';
-
-    case PieceType.KING_WHITE:
-      return '♔';
-    case PieceType.KING_BLACK:
-      return '♚';
-
-    case PieceType.KNIGHT_WHITE:
-      return '♘';
-    case PieceType.KNIGHT_BLACK:
-      return '♞';
-
-    case PieceType.PAWN_WHITE:
-      return '♙';
-    case PieceType.PAWN_BLACK:
-      return '♟︎';
-
-    case PieceType.QUEEN_WHITE:
-      return '♕';
-    case PieceType.QUEEN_BLACK:
-      return '♛';
-
-    case PieceType.ROOK_WHITE:
-      return '♖';
-    case PieceType.ROOK_BLACK:
-      return '♜';
-
-    default:
-      return null;
-  }
 }
 
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Naming_the_squares
