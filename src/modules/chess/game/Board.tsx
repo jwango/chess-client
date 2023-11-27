@@ -7,11 +7,12 @@ interface BoardProps {
   gameState: GameState;
   selectedMove?: GameMove;
   allowedMoves?: GameMove[];
+  onClickSpace?: (space: GameSpace) => void;
 }
 
 const EMPTY_BOARD = getEmptyBoard();
 
-export const Board = ({ gameState, selectedMove, allowedMoves }: BoardProps) => {
+export const Board = ({ gameState, selectedMove, allowedMoves, onClickSpace }: BoardProps) => {
   const board = gameState?.chessBoard || EMPTY_BOARD;
 
   return <div>
@@ -28,13 +29,19 @@ export const Board = ({ gameState, selectedMove, allowedMoves }: BoardProps) => 
             if (isToSpace) {
               spaceClassname = 'border-red-500';
             } else if (isAllowedSpace) {
-              spaceClassname = 'border-yellow-200';
+              spaceClassname = 'border-blue-400';
             }
             if (isFromSpace) {
-              spaceClassname = 'border-yellow-500'
+              spaceClassname = 'border-blue-600'
             }
 
-            return <Space row={row} column={column} pieceType={rowPieces[column]} className={`${spaceClassname} border-[3px] !leading-[26px]`} />
+            return <Space
+              row={row}
+              column={column}
+              pieceType={rowPieces[column]}
+              className={`${spaceClassname} border-[3px] !leading-[26px]`}
+              onClick={() => onClickSpace({ row, column })}
+            />
           })}
         </>
       })}
@@ -52,9 +59,10 @@ interface SpaceProps {
   row: number;
   column: number;
   pieceType: PieceType;
+  onClick?: () => void;
 }
 
-const Space = ({ className = '', row, column, pieceType }: SpaceProps) => {
+const Space = ({ className = '', row, column, pieceType, onClick }: SpaceProps) => {
   const isSpaceBlack = getIsSpaceBlack(row, column);
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
@@ -63,6 +71,7 @@ const Space = ({ className = '', row, column, pieceType }: SpaceProps) => {
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${className}`
     }
+    onClick={() => onClick && onClick()}
   >
     <span className={`${isPieceBlack ? 'text-black' : 'text-white'}`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;

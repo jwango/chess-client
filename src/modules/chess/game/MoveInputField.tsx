@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { GameMove, GameSpace, PieceType } from "../lib/dto";
+import { GameMove } from "../lib/dto";
 import { Select, SelectOption } from "@shared";
-import { getPieceLetter } from "../lib/util";
-
-const CHAR_CODE_a = 97;
+import { PieceIndex, getPieceIndex } from "../lib/util";
 
 export interface MoveInputFilters {
   piece: PieceIndex;
@@ -15,9 +12,6 @@ interface MoveInputFieldProps {
   onFilter: (filters: MoveInputFilters) => void;
   onSelect?: (move: GameMove, movesForPiece: GameMove[]) => void;
 }
-
-// Format of long algebraic notation
-type PieceIndex = string;
 
 export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInputFieldProps) => {
   const movesByPiece = getMovesByPiece(moves);
@@ -63,17 +57,6 @@ function getMovesByPiece(moves: GameMove[]): PieceMoveMap {
       [pieceIndex]: [...existingMoves, currMove]
     };
   }, {} as PieceMoveMap);
-}
-
-function getPieceIndex(pieceType: PieceType, space: GameSpace): PieceIndex {
-  const pieceLetter = getPieceLetter(pieceType) || '➜';
-  const spaceCoord = getSpaceCoord(space);
-  return `${pieceLetter}${spaceCoord}`;
-}
-
-// https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Naming_the_squares
-function getSpaceCoord(space: GameSpace): string {
-  return `${String.fromCharCode(CHAR_CODE_a + space.column)}${space.row + 1}`;
 }
 
 function getMoveName(move: GameMove): string {
