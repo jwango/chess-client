@@ -7,7 +7,7 @@ const CHAR_CODE_a = 97;
 
 interface MoveInputFieldProps {
   moves: GameMove[];
-  onSelect?: (move: GameMove) => void;
+  onSelect?: (move: GameMove, movesForPiece: GameMove[]) => void;
 }
 
 // Format of long algebraic notation
@@ -32,7 +32,7 @@ export const MoveInputField = ({ moves, onSelect }: MoveInputFieldProps) => {
   };
 
   const handleSelectMove = (moveOption: SelectOption<GameMove>) => {
-    onSelect && onSelect(moveOption?.val);
+    onSelect && onSelect(moveOption?.val, movesByPiece[currPiece]);
   };
  
   return <div className="flex flex-row flex-wrap gap-2">
