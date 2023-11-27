@@ -17,6 +17,8 @@ export type RegisterPlayerResponse = ResponseBody<GameInfo>;
 
 export type StartGameResponse = ResponseBody<GameInfo>;
 
+export type SubmitMoveResponse = ResponseBody<GameState>;
+
 export type GameStatus = 'RUNNING' | 'WAITING';
 
 export type GameMoveType = 'MOVE' | 'TAKE' | 'PROMOTION' | 'CASTLE';
