@@ -87,3 +87,16 @@ export function getCodeVerifier(state: string): string {
 export function setCodeVerifier(state: string, codeVerifier: string): void {
   sessionStorage.setItem(`codeVerifier-${state}`, codeVerifier);
 }
+
+const RETURN_TO_DELIMITER = ";returnTo=";
+
+export async function buildState(returnTo: string): Promise<string> {
+  const randomState = await generateNonce();
+  const returnQueryParam = `${RETURN_TO_DELIMITER}${returnTo || '/'}`;
+  return `${randomState}${returnQueryParam}`;
+}
+
+export function getReturnToFromState(state: string): string {
+  const parts = state.split(RETURN_TO_DELIMITER);
+  return parts[1];
+}

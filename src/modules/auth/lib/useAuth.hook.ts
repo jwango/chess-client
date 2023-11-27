@@ -1,9 +1,13 @@
 import { useContext } from "react";
 import { AuthContext } from "./auth.provider";
 import { CognitoTokenResponseBody, UserIdentity, useAuthApi } from "./auth.api";
-import { base64URLEncode, buildCognitoAuthorizeUrl, buildCognitoLoginUrl, generateNonce, setCodeVerifier, sha256 } from "./util";
+import { base64URLEncode, buildCognitoAuthorizeUrl, buildCognitoLoginUrl, buildState, generateNonce, setCodeVerifier, sha256 } from "./util";
 
 const IDENTITY_LIST_STORAGE_KEY = "cognito.userInfo.identities";
+
+export interface AuthLoginOptions {
+  returnTo?: string;
+}
 
 export const useAuth = () => {
   const authContext = useContext(AuthContext);
@@ -17,8 +21,8 @@ export const useAuth = () => {
     localStorage.setItem(IDENTITY_LIST_STORAGE_KEY, JSON.stringify(identities));
   }
 
-  async function loginSilently(): Promise<CognitoTokenResponseBody> {
-    const state = await generateNonce();
+  async function loginSilently(options: AuthLoginOptions): Promise<CognitoTokenResponseBody> {
+    const state = await buildState(options?.returnTo);
 	  const codeVerifier = await generateNonce();
 	  setCodeVerifier(state, codeVerifier);
     console.log("saved code verifier", codeVerifier);
