@@ -67,13 +67,13 @@ const Space = ({ className = '', row, column, pieceType, onClick }: SpaceProps) 
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[32px] text-3xl text-center leading-none box-border
+      `h-[32px] text-3xl text-center leading-none box-border m-0
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${className}`
     }
     onClick={() => onClick && onClick()}
   >
-    <span className={`${isPieceBlack ? 'text-black' : 'text-white'}`}>{getPieceLetter(pieceType) || ''}</span>
+    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
 };
 
