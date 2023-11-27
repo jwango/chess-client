@@ -1,4 +1,4 @@
-import { GameMove, GameState, PieceType } from "../lib/dto";
+import { GameMove, GameSpace, GameState, PieceType } from "../lib/dto";
 import { getIsPieceBlack, getPieceLetter } from "../lib/util";
 
 import styles from './Board.module.css';
@@ -6,11 +6,13 @@ import styles from './Board.module.css';
 interface BoardProps {
   gameState: GameState;
   selectedMove?: GameMove;
+  allowedMoves?: GameMove[];
+  onClickSpace?: (space: GameSpace) => void;
 }
 
 const EMPTY_BOARD = getEmptyBoard();
 
-export const Board = ({ gameState, selectedMove }: BoardProps) => {
+export const Board = ({ gameState, selectedMove, allowedMoves, onClickSpace }: BoardProps) => {
   const board = gameState?.chessBoard || EMPTY_BOARD;
 
   return <div>
@@ -20,17 +22,26 @@ export const Board = ({ gameState, selectedMove }: BoardProps) => {
         return <>
           <div className="text-center leading-[32px]">{row + 1}</div>
           {[0, 1, 2, 3, 4, 5, 6, 7].map(column => {
-            const isToSpace = selectedMove?.toSpace?.column === column && selectedMove?.toSpace?.row === row;
-            const isFromSpace = selectedMove?.fromSpace?.column === column && selectedMove?.fromSpace?.row === row;
-            let bgColorOverride = '';
+            const isToSpace = matchesSpace(row, column, selectedMove?.toSpace);
+            const isFromSpace = matchesSpace(row, column, selectedMove?.fromSpace);
+            const isAllowedSpace = !!allowedMoves?.find(m => matchesSpace(row, column, m.toSpace));
+            let spaceClassname = 'border-transparent';
             if (isToSpace) {
-              bgColorOverride = '!bg-yellow-500';
+              spaceClassname = 'border-red-500';
+            } else if (isAllowedSpace) {
+              spaceClassname = 'border-blue-400';
             }
             if (isFromSpace) {
-              bgColorOverride = 'border-[3px] border-yellow-500 !leading-[26px]'
+              spaceClassname = 'border-blue-600'
             }
 
-            return <Space row={row} column={column} pieceType={rowPieces[column]} className={bgColorOverride} />
+            return <Space
+              row={row}
+              column={column}
+              pieceType={rowPieces[column]}
+              className={`${spaceClassname} border-[3px] !leading-[26px]`}
+              onClick={() => onClickSpace({ row, column })}
+            />
           })}
         </>
       })}
@@ -48,17 +59,19 @@ interface SpaceProps {
   row: number;
   column: number;
   pieceType: PieceType;
+  onClick?: () => void;
 }
 
-const Space = ({ className = '', row, column, pieceType }: SpaceProps) => {
+const Space = ({ className = '', row, column, pieceType, onClick }: SpaceProps) => {
   const isSpaceBlack = getIsSpaceBlack(row, column);
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[32px] text-3xl text-center leading-none
+      `h-[32px] text-3xl text-center leading-none box-border
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${className}`
     }
+    onClick={() => onClick && onClick()}
   >
     <span className={`${isPieceBlack ? 'text-black' : 'text-white'}`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
@@ -78,4 +91,8 @@ function getEmptyBoard(): PieceType[][] {
 
 function getIsSpaceBlack(row: number, column: number): boolean {
   return (((row % 2) + column) % 2 === 1)
+}
+
+function matchesSpace(row: number, column: number, space: GameSpace): boolean {
+  return row === space?.row && column === space?.column;
 }
