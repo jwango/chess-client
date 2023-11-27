@@ -4,26 +4,32 @@ import { PieceType } from "./dto";
 export function getPieceLetter(pieceType: PieceType): string {
   switch (pieceType) {
     case PieceType.BISHOP_WHITE:
+      return '♗';
     case PieceType.BISHOP_BLACK:
       return '♝';
 
     case PieceType.KING_WHITE:
+      return '♔';
     case PieceType.KING_BLACK:
       return '♚';
 
     case PieceType.KNIGHT_WHITE:
+      return '♘';
     case PieceType.KNIGHT_BLACK:
       return '♞';
 
     case PieceType.PAWN_WHITE:
+      return '♙';
     case PieceType.PAWN_BLACK:
       return '♟︎';
 
     case PieceType.QUEEN_WHITE:
+      return '♕';
     case PieceType.QUEEN_BLACK:
       return '♛';
 
     case PieceType.ROOK_WHITE:
+      return '♖';
     case PieceType.ROOK_BLACK:
       return '♜';
 

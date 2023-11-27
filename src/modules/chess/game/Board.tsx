@@ -55,7 +55,7 @@ const Space = ({ className = '', row, column, pieceType }: SpaceProps) => {
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[32px] text-3xl text-center leading-none
+      `h-[32px] text-3xl text-center leading-none box-border
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${className}`
     }

@@ -1,7 +1,7 @@
 .TextOutlineWhite {
-  text-shadow: white 0px 0px 2px; /* color offset-x offset-y blur-radius */
+  text-shadow: white 0px 0px 4px; /* color offset-x offset-y blur-radius */
 }
 
 .TextOutlineBlack {
-  text-shadow: black 0px 0px 2px; /* color offset-x offset-y blur-radius */
+  text-shadow: black 0px 0px 4px; /* color offset-x offset-y blur-radius */
 }

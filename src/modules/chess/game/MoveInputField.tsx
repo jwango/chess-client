@@ -35,7 +35,7 @@ export const MoveInputField = ({ moves, onSelect }: MoveInputFieldProps) => {
     onSelect && onSelect(moveOption?.val);
   };
  
-  return <div className="flex flex-row gap-2">
+  return <div className="flex flex-row flex-wrap gap-2">
     <label>
       Select a piece
       <Select key={moves?.toString()} options={pieceOptions} placeholder='No pieces available' onSelect={handleSelectPiece} />
