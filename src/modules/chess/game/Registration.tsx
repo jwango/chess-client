@@ -20,7 +20,14 @@ export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
   // Start only for waiting games with exactly 2 players where I am already registered
   const canStart = isWaiting && numPlayers === 2 && !!myPlayer;
 
+  // I can invite people to a game I am currently a part of
+  const canInvite = isWaiting && numPlayers < 2 && !!myPlayer;
+
   const isLoading = registerMutation.isPending || startMutation.isPending;
+
+  const handleCopyInvite = () => {
+    navigator.clipboard.writeText(window.location.href);
+  }
 
   return <>
     <DebugQuery isLoading={isLoading} data={gameInfo} />
@@ -37,6 +44,12 @@ export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
         disabled={!canStart}
         onClick={() => startMutation.mutate({ gameId: gameInfo?.gameId })}>
           Start
+      </button>
+      <button
+        type="button"
+        disabled={!canInvite}
+        onClick={handleCopyInvite}>
+          Copy invite link
       </button>
     </div>
   </>;
