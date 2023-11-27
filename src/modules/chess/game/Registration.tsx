@@ -1,31 +1,28 @@
-import { AuthGuard, useAuth } from "@auth";
 import { GameInfo, GamePlayer } from "../lib/dto";
 import { DebugQuery } from "@shared";
 import { useRegisterMyselfMutation, useStartGameMutation } from "../lib/chess.mutation";
 
 interface RegistrationProps {
   gameInfo: GameInfo;
-  players: GamePlayer[];
+  myPlayer: GamePlayer;
 }
 
-export const Registration = ({ gameInfo, players }: RegistrationProps) => {
+export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
   const registerMutation = useRegisterMyselfMutation();
   const startMutation = useStartGameMutation();
-  const { userInfo } = useAuth();
 
   const isWaiting = gameInfo?.currentState === 'WAITING';
   const numPlayers = gameInfo?.registeredPlayers?.length || 0;
-  const myselfPlayer = players?.find(p => p.userId === userInfo?.sub);
 
   // Register only for waiting games with less than 2 players where I am not already registered
-  const canRegister = isWaiting && numPlayers < 2 && !myselfPlayer;
+  const canRegister = isWaiting && numPlayers < 2 && !myPlayer;
 
   // Start only for waiting games with exactly 2 players where I am already registered
-  const canStart = isWaiting && numPlayers === 2 && !!myselfPlayer;
+  const canStart = isWaiting && numPlayers === 2 && !!myPlayer;
 
   const isLoading = registerMutation.isPending || startMutation.isPending;
 
-  return <AuthGuard>
+  return <>
     <DebugQuery isLoading={isLoading} data={gameInfo} />
 
     <div className="flex flex-row gap-2">
@@ -42,5 +39,5 @@ export const Registration = ({ gameInfo, players }: RegistrationProps) => {
           Start
       </button>
     </div>
-  </AuthGuard>;
+  </>;
 };

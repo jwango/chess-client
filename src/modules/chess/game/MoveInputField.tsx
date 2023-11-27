@@ -1,0 +1,100 @@
+import { useState } from "react";
+import { GameMove, GameSpace, PieceType } from "../lib/dto";
+import { Select, SelectOption } from "@shared";
+
+const CHAR_CODE_a = 97;
+
+interface MoveInputFieldProps {
+  moves: GameMove[];
+}
+
+// Format of long algebraic notation
+type PieceIndex = string;
+
+export const MoveInputField = ({ moves }: MoveInputFieldProps) => {
+  const [currPiece, setCurrPiece] = useState<PieceIndex>(null);
+
+  const movesByPiece = getMovesByPiece(moves);
+  const pieceIndices = Object.keys(movesByPiece);
+  const pieceOptions: SelectOption<PieceIndex>[] = (pieceIndices || [])?.map(pieceIndex => (
+    { id: pieceIndex, name: pieceIndex, val: pieceIndex }
+  ));
+
+  const moveOptions = (movesByPiece[currPiece] || [])?.map((move, i) => {
+    const moveName = getMoveName(move);
+    return { id: moveName, name: moveName, val: move };
+  });
+
+  const handleSelectPiece = (pieceOption: SelectOption<PieceIndex>) => {
+    setCurrPiece(pieceOption?.val || null);
+  };
+
+  return <div className="flex flex-row gap-2">
+    <label>
+      Select a piece
+      <Select key={moves?.toString()} options={pieceOptions} placeholder='No pieces available' onSelect={handleSelectPiece} />
+    </label>
+    <label>
+      Select an action
+      <Select key={currPiece} options={moveOptions} placeholder='Click to select an action' />
+    </label>
+  </div>;
+}
+
+type PieceMoveMap = Partial<Record<PieceIndex, GameMove[]>>;
+
+function getMovesByPiece(moves: GameMove[]): PieceMoveMap {
+  return (moves || []).reduce((acc, currMove) => {
+    const pieceIndex = getPieceIndex(currMove.pieceType, currMove.fromSpace);
+    const existingMoves = acc[pieceIndex] || [];
+    return {
+      ...acc,
+      [pieceIndex]: [...existingMoves, currMove]
+    };
+  }, {} as PieceMoveMap);
+}
+
+function getPieceIndex(pieceType: PieceType, space: GameSpace): PieceIndex {
+  const pieceLetter = getPieceLetter(pieceType);
+  const spaceCoord = getSpaceCoord(space);
+  return `${pieceLetter}${spaceCoord}`;
+}
+
+function getPieceLetter(pieceType: PieceType): string {
+  switch (pieceType) {
+    case PieceType.BISHOP_BLACK:
+    case PieceType.BISHOP_WHITE:
+      return 'B';
+
+    case PieceType.KING_WHITE:
+    case PieceType.KING_BLACK:
+      return 'K';
+
+    case PieceType.KNIGHT_WHITE:
+    case PieceType.KNIGHT_BLACK:
+      return 'N';
+
+    case PieceType.PAWN_WHITE:
+    case PieceType.PAWN_BLACK:
+      return 'p';
+
+    case PieceType.QUEEN_WHITE:
+    case PieceType.QUEEN_BLACK:
+      return 'Q';
+
+    case PieceType.ROOK_WHITE:
+    case PieceType.ROOK_BLACK:
+      return 'R';
+
+    default:
+      return '➜';
+  }
+}
+
+function getSpaceCoord(space: GameSpace): string {
+  return `${String.fromCharCode(CHAR_CODE_a + space.column)}${space.row + 1}`;
+}
+
+function getMoveName(move: GameMove): string {
+  return `${move.moveType} ${getPieceIndex(move.otherPieceType, move.toSpace)}`;
+}
