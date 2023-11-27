@@ -1,7 +1,7 @@
 {
   "backgroundColor": {
     "light": {
-      "DEFAULT": "#FFFFFF"
+      "DEFAULT": "#f3f4f6"
     },
     "dark": {
       "DEFAULT": "#000000"
