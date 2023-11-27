@@ -72,6 +72,7 @@ module.exports = {
       "@shared$": path.resolve(__dirname, "./src/shared/index.ts"),
       "@shared/lib$": path.resolve(__dirname, "./src/shared/lib/index.ts"),
       "@home$": path.resolve(__dirname, "./src/modules/home/index.ts"),
+      "@chess$": path.resolve(__dirname, "./src/modules/chess/index.ts")
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     mainFiles: ['index']

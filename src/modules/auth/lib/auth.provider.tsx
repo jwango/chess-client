@@ -1,10 +1,11 @@
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react';
-import { CognitoTokenResponseBody } from '../api/auth.api';
+import { CognitoTokenResponseBody, UserInfo } from './auth.api';
 import { useNavigate } from 'react-router';
 
 interface AuthContextState {
   isLoggedIn: boolean;
   tokenData: CognitoTokenResponseBody;
+  userInfo: UserInfo;
   login: () => void;
 }
 
@@ -15,6 +16,7 @@ export type AuthContextValue = AuthContextState & {
 const DEFAULT_STATE: AuthContextState = {
   isLoggedIn: false,
   tokenData: null,
+  userInfo: null,
   login: () => {},
 };
 

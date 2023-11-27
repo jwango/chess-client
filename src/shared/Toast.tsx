@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 interface ToastState {
@@ -67,10 +67,17 @@ const CLOSED_STATE: ToastState = { open: false, title: "", message: "", timeoutM
 
 export function useToastState() {
   const [state, setState] = useState<ToastState>(CLOSED_STATE);
-  const dismiss = () => setState((prev) => ({ ...prev, open: false }));
+  const dismiss = useCallback(
+    () => setState((prev) => ({ ...prev, open: false })),
+    [setState]
+  );
+  const show = useCallback(
+    (data: Omit<ToastState, 'open'>) => { setState({ onClose: dismiss, ...data, open: true})},
+    [setState, dismiss]
+  );
   return {
     toastState: state,
-    show: (data: Omit<ToastState, 'open'>) => { setState({ onClose: dismiss, ...data, open: true})},
+    show,
     dismiss
   };
 }

@@ -13,6 +13,7 @@
       "@shared": ["src/shared/index.ts"],
       "@shared/lib": ["src/shared/lib/index.ts"],
       "@home": ["src/modules/home/index.ts"],
+      "@chess": ["src/modules/chess/index.ts"],
     },
     "removeComments": true,
     "resolveJsonModule": true,

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "./auth.provider";
-import { CognitoTokenResponseBody, UserIdentity, useAuthApi } from "../api/auth.api";
+import { CognitoTokenResponseBody, UserIdentity, useAuthApi } from "./auth.api";
 import { base64URLEncode, buildCognitoAuthorizeUrl, buildCognitoLoginUrl, generateNonce, setCodeVerifier, sha256 } from "./util";
 
 const IDENTITY_LIST_STORAGE_KEY = "cognito.userInfo.identities";
