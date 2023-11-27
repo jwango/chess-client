@@ -21,6 +21,21 @@ export type GameStatus = 'RUNNING' | 'WAITING';
 
 export type GameMoveType = 'MOVE' | 'TAKE' | 'PROMOTION' | 'CASTLE';
 
+export enum PieceType {
+  BISHOP_WHITE = 'BISHOP_WHITE',
+  KING_WHITE = 'KING_WHITE',
+  KNIGHT_WHITE = 'KNIGHT_WHITE',
+  PAWN_WHITE = 'PAWN_WHITE',
+  QUEEN_WHITE = 'QUEEN_WHITE',
+  ROOK_WHITE = 'ROOK_WHITE',
+  BISHOP_BLACK = 'BISHOP_BLACK',
+  KING_BLACK = 'KING_BLACK',
+  KNIGHT_BLACK = 'KNIGHT_BLACK',
+  PAWN_BLACK = 'PAWN_BLACK',
+  QUEEN_BLACK = 'QUEEN_BLACK',
+  ROOK_BLACK = 'ROOK_BLACK'
+}
+
 /** Inner Data Types */
 export interface GameSpace {
   row: number;
@@ -36,8 +51,8 @@ export interface GameInfo {
 export interface GameState {
   currentPlayerTurn: number;
   currentPlayerId: string;
-  chessPiecesRemoved: string[];
-  chessBoard: string[][];
+  chessPiecesRemoved: PieceType[];
+  chessBoard: PieceType[][];
   pendingMoves: GameMove[];
 }
 
@@ -52,6 +67,6 @@ export interface GameMove {
   moveType: GameMoveType;
   fromSpace: GameSpace;
   toSpace: GameSpace;
-  pieceType: string;
-  otherPieceType: string;
+  pieceType: PieceType;
+  otherPieceType: PieceType;
 }
