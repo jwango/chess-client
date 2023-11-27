@@ -27,7 +27,7 @@ export const Board = ({ gameState, selectedMove }: BoardProps) => {
               bgColorOverride = '!bg-yellow-500';
             }
             if (isFromSpace) {
-              bgColorOverride = 'border-[3px] border-yellow-500 leading-[26px]'
+              bgColorOverride = 'border-[3px] border-yellow-500 !leading-[26px]'
             }
 
             return <Space row={row} column={column} pieceType={rowPieces[column]} className={bgColorOverride} />
