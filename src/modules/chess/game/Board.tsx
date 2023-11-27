@@ -25,21 +25,21 @@ export const Board = ({ gameState, selectedMove, allowedMoves, onClickSpace }: B
             const isToSpace = matchesSpace(row, column, selectedMove?.toSpace);
             const isFromSpace = matchesSpace(row, column, selectedMove?.fromSpace);
             const isAllowedSpace = !!allowedMoves?.find(m => matchesSpace(row, column, m.toSpace));
-            let spaceClassname = 'border-transparent';
+            let spaceClassname = '';
             if (isToSpace) {
-              spaceClassname = 'border-red-500';
+              spaceClassname = '!border-red-500';
             } else if (isAllowedSpace) {
-              spaceClassname = 'border-blue-400';
+              spaceClassname = '!border-blue-400';
             }
             if (isFromSpace) {
-              spaceClassname = 'border-blue-600'
+              spaceClassname = '!border-blue-600'
             }
 
             return <Space
               row={row}
               column={column}
               pieceType={rowPieces[column]}
-              className={`${spaceClassname} border-[3px] !leading-[26px]`}
+              className={`${spaceClassname}`}
               onClick={() => onClickSpace({ row, column })}
             />
           })}
@@ -67,13 +67,13 @@ const Space = ({ className = '', row, column, pieceType, onClick }: SpaceProps) 
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[32px] text-3xl text-center leading-none box-border m-0
+      `h-[32px] text-3xl text-center leading-none box-border relative border-[3px] border-transparent
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${className}`
     }
     onClick={() => onClick && onClick()}
   >
-    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0`}>{getPieceLetter(pieceType) || ''}</span>
+    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-3px] top-[-3px] w-[32px]`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
 };
 
