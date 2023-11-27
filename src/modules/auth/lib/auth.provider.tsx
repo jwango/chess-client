@@ -1,12 +1,10 @@
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react';
 import { CognitoTokenResponseBody, UserInfo } from './auth.api';
-import { useNavigate } from 'react-router';
 
 interface AuthContextState {
   isLoggedIn: boolean;
   tokenData: CognitoTokenResponseBody;
   userInfo: UserInfo;
-  login: () => void;
 }
 
 export type AuthContextValue = AuthContextState & {
@@ -17,7 +15,6 @@ const DEFAULT_STATE: AuthContextState = {
   isLoggedIn: false,
   tokenData: null,
   userInfo: null,
-  login: () => {},
 };
 
 export const AuthContext = createContext<AuthContextValue>({
@@ -27,15 +24,9 @@ export const AuthContext = createContext<AuthContextValue>({
 
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [state, setState] = useState<AuthContextState>(DEFAULT_STATE);
-  const navigate = useNavigate();
-
-  function login(): void {
-    navigate("/login");
-  }
 
   const contextValue: AuthContextValue = {
     ...state,
-    login: useCallback(login, [navigate]),
     setAuthState: setState
   };
 

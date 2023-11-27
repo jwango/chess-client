@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthApi } from "./lib/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
+import { getReturnToFromState } from "./lib/util";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
   const { exchangeCodeForToken, getUserInfo } = useAuthApi();
   const { tokenData, userInfo, loginSilently, setAuthState, setIdentities } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [ returnTo, setReturnTo ] = useState<string>("/");
   const navigate = useNavigate();
 
   // Load shared state
@@ -17,13 +19,14 @@ export const LoginPage = () => {
   // Either grab a code or exchange the code for a token
   useEffect(() => {
     if (!getHasCode(code)) {
-      loginSilently();
+      loginSilently({ returnTo: "/" });
     } else {
       exchangeCodeForToken(code, state)
         .then((tokenPayload) => {
           setAuthState(prev => { 
             return {...prev, isLoggedIn: true, tokenData: tokenPayload }
           });
+          setReturnTo(getReturnToFromState(state));
         })
         .catch(() => setErrorMessage("Error logging in. Please ask your admin for help."));
     }
@@ -36,10 +39,10 @@ export const LoginPage = () => {
         .then(res => {
           setIdentities(res.identities);
           setAuthState(prev => ({ ...prev, userInfo: res }));
-          navigate("/");
+          navigate(returnTo || "/");
         });
     }
-  }, [userInfo, tokenData, code]);
+  }, [userInfo, tokenData, code, returnTo]);
 
   // State just for rendering
   const hasCode = getHasCode(code);

@@ -21,7 +21,7 @@ export function useRegisterMyselfMutation() {
       return chessApi.registerMyself(gameId); 
     },
     onSuccess: (data: GameInfo, { gameId }) => {
-      queryClient.invalidateQueries({ queryKey: getGameQueryKey(gameId) });
+      queryClient.setQueryData(getGameQueryKey(gameId), data);
       queryClient.invalidateQueries({ queryKey: getPlayersQueryKey(gameId) });
     }
   });
@@ -40,7 +40,7 @@ export function useStartGameMutation() {
       return chessApi.startGame(gameId); 
     },
     onSuccess: (data: GameInfo, { gameId }) => {
-      queryClient.invalidateQueries({ queryKey: getGameQueryKey(gameId) });
+      queryClient.setQueryData(getGameQueryKey(gameId), data);
     }
   });
 }
@@ -58,8 +58,8 @@ export function useSubmitMoveMutation() {
       return chessApi.submitMove(gameId, move); 
     },
     onSuccess: (data: GameState, { gameId }) => {
-      queryClient.invalidateQueries({ queryKey: getGameStateQueryKey(gameId) });
-      queryClient.invalidateQueries({ queryKey: getMovesQueryKey(gameId) });
+      queryClient.setQueryData(getGameStateQueryKey(gameId), data);
+      queryClient.setQueryData(getMovesQueryKey(gameId), []);
     }
   });
 }

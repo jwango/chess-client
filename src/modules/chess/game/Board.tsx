@@ -27,12 +27,12 @@ export const Board = ({ gameState, selectedMove, allowedMoves, onClickSpace }: B
             const isAllowedSpace = !!allowedMoves?.find(m => matchesSpace(row, column, m.toSpace));
             let spaceClassname = '';
             if (isToSpace) {
-              spaceClassname = '!border-red-500';
+              spaceClassname = '!border-blue-500';
             } else if (isAllowedSpace) {
-              spaceClassname = '!border-blue-400';
+              spaceClassname = '!border-red-300';
             }
             if (isFromSpace) {
-              spaceClassname = '!border-blue-600'
+              spaceClassname = '!border-red-500'
             }
 
             return <Space

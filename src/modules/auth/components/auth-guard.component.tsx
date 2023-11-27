@@ -1,17 +1,19 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useAuth } from "../lib/useAuth.hook";
+import { useLocation } from "react-router";
 
 export const AuthGuard = ({ children }: PropsWithChildren<{}>) => {
-  const { isLoggedIn, login } = useAuth();
+  const { isLoggedIn, loginSilently } = useAuth();
   const [init, setInit] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (!init) {
       setInit(true);
     } else if (!isLoggedIn) {
-      login();
+      loginSilently({ returnTo: pathname });
     }
-  }, [init, isLoggedIn, login]);
+  }, [init, isLoggedIn, loginSilently]);
 
   return <>
     {isLoggedIn && children}

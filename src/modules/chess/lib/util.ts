@@ -70,5 +70,8 @@ const CHAR_CODE_a = 97;
 
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Naming_the_squares
 export function getSpaceCoord(space: GameSpace): string {
+  if (!space) {
+    return '';
+  }
   return `${String.fromCharCode(CHAR_CODE_a + space.column)}${space.row + 1}`;
 }
