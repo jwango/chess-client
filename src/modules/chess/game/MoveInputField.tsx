@@ -55,42 +55,50 @@ function getMovesByPiece(moves: GameMove[]): PieceMoveMap {
 }
 
 function getPieceIndex(pieceType: PieceType, space: GameSpace): PieceIndex {
-  const pieceLetter = getPieceLetter(pieceType);
+  const pieceLetter = getPieceLetter(pieceType) || '➜';
   const spaceCoord = getSpaceCoord(space);
   return `${pieceLetter}${spaceCoord}`;
 }
 
+// https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 function getPieceLetter(pieceType: PieceType): string {
   switch (pieceType) {
-    case PieceType.BISHOP_BLACK:
     case PieceType.BISHOP_WHITE:
-      return 'B';
+      return '♗';
+    case PieceType.BISHOP_BLACK:
+      return '♝';
 
     case PieceType.KING_WHITE:
+      return '♔';
     case PieceType.KING_BLACK:
-      return 'K';
+      return '♚';
 
     case PieceType.KNIGHT_WHITE:
+      return '♘';
     case PieceType.KNIGHT_BLACK:
-      return 'N';
+      return '♞';
 
     case PieceType.PAWN_WHITE:
+      return '♙';
     case PieceType.PAWN_BLACK:
-      return 'p';
+      return '♟︎';
 
     case PieceType.QUEEN_WHITE:
+      return '♕';
     case PieceType.QUEEN_BLACK:
-      return 'Q';
+      return '♛';
 
     case PieceType.ROOK_WHITE:
+      return '♖';
     case PieceType.ROOK_BLACK:
-      return 'R';
+      return '♜';
 
     default:
-      return '➜';
+      return null;
   }
 }
 
+// https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Naming_the_squares
 function getSpaceCoord(space: GameSpace): string {
   return `${String.fromCharCode(CHAR_CODE_a + space.column)}${space.row + 1}`;
 }
