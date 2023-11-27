@@ -5,30 +5,35 @@ import { getPieceLetter } from "../lib/util";
 
 const CHAR_CODE_a = 97;
 
+export interface MoveInputFilters {
+  piece: PieceIndex;
+}
+
 interface MoveInputFieldProps {
   moves: GameMove[];
+  filters: MoveInputFilters;
+  onFilter: (filters: MoveInputFilters) => void;
   onSelect?: (move: GameMove, movesForPiece: GameMove[]) => void;
 }
 
 // Format of long algebraic notation
 type PieceIndex = string;
 
-export const MoveInputField = ({ moves, onSelect }: MoveInputFieldProps) => {
-  const [currPiece, setCurrPiece] = useState<PieceIndex>(null);
-
+export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInputFieldProps) => {
   const movesByPiece = getMovesByPiece(moves);
   const pieceIndices = Object.keys(movesByPiece);
   const pieceOptions: SelectOption<PieceIndex>[] = (pieceIndices || [])?.map(pieceIndex => (
     { id: pieceIndex, name: pieceIndex, val: pieceIndex }
   ));
 
+  const currPiece = filters.piece;
   const moveOptions = (movesByPiece[currPiece] || [])?.map((move, i) => {
     const moveName = getMoveName(move);
     return { id: moveName, name: moveName, val: move };
   });
 
   const handleSelectPiece = (pieceOption: SelectOption<PieceIndex>) => {
-    setCurrPiece(pieceOption?.val || null);
+    onFilter({ piece: pieceOption?.val || null });
   };
 
   const handleSelectMove = (moveOption: SelectOption<GameMove>) => {

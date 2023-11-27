@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useGetGameStateQuery, useGetMovesQuery } from "../lib/chess.query";
 import { GameInfo, GameMove, GamePlayer } from "../lib/dto";
-import { MoveInputField } from "./MoveInputField";
+import { MoveInputField, MoveInputFilters } from "./MoveInputField";
 import { Board } from "./Board";
 import { useSubmitMoveMutation } from "../lib/chess.mutation";
 
@@ -13,6 +13,7 @@ interface PlayProps {
 
 export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
   const [selectedMove, setSelectedMove] = useState<GameMove>(null);
+  const [filters, setFilters] = useState<MoveInputFilters>({ piece: null });
   const [movesBySelectedPiece, setMovesBySelectedPiece] = useState<GameMove[]>([]);
   const { data: state, isFetching: isLoadingState, refetch: refetchState } = useGetGameStateQuery(gameInfo?.gameId);
   const { data: moves, isFetching: isLoadingMoves, refetch: refetchMoves } = useGetMovesQuery(gameInfo?.gameId);
@@ -39,7 +40,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     </div>}
     {isRunning && <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} />}
     {isRunning && !isLoadingMoves && <>
-      <MoveInputField moves={moves} onSelect={handleSelectInput} />
+      <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
       <button className="mt-2" type="button" disabled={!canSubmit} onClick={() => submitMoveMutation.mutate({ gameId: gameInfo?.gameId, move: selectedMove })}>Submit move</button>
     </>}
   </>;
