@@ -41,6 +41,11 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     }
   };
 
+  const handleSubmit = () => {
+    submitMoveMutation.mutate({ gameId: gameInfo?.gameId, move: selectedMove });
+    setFilters({ piece: null });
+  };
+
   return <>
     {isRunning && <div>
       <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
@@ -50,7 +55,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     {isRunning && <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>}
     {isRunning && !isLoadingMoves && <>
       <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
-      <button className="mt-2" type="button" disabled={!canSubmit} onClick={() => submitMoveMutation.mutate({ gameId: gameInfo?.gameId, move: selectedMove })}>Submit move</button>
+      <button className="mt-2" type="button" disabled={!canSubmit} onClick={handleSubmit}>Submit move</button>
     </>}
   </>;
 }
