@@ -35,6 +35,9 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
     if (moveOptions?.length) {
       setSelectedMoveOption(moveOptions[0]);
       onSelect(moveOptions[0].val, movesByPiece[currPiece]);
+    } else {
+      setSelectedMoveOption(null);
+      onSelect(null, []);
     }
   }, [filters]);
 
