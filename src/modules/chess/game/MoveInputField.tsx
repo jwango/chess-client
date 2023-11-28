@@ -1,6 +1,7 @@
 import { GameMove, GameMoveType } from "../lib/dto";
 import { Select, SelectOption } from "@shared";
 import { PieceIndex, getPieceIndex, getSpaceCoord } from "../lib/util";
+import { useEffect, useState } from "react";
 
 export interface MoveInputFilters {
   piece: PieceIndex;
@@ -14,19 +15,28 @@ interface MoveInputFieldProps {
 }
 
 export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInputFieldProps) => {
+  const [selectedMoveOption, setSelectedMoveOption] = useState<SelectOption<GameMove>>(null);
+
+  // group the moves and generate options by the group keys
   const movesByPiece = getMovesByPiece(moves);
   const pieceIndices = Object.keys(movesByPiece);
   const pieceOptions: SelectOption<PieceIndex>[] = (pieceIndices || [])
-    ?.map(pieceIndex => (
-      { id: pieceIndex, name: pieceIndex, val: pieceIndex }
-    ))
+    ?.map(pieceIndexOption)
     ?.sort((a, b) => a.name.localeCompare(b.name));
 
+  // map out move options by the currently selected piece
   const currPiece = filters.piece;
   const moveOptions = (movesByPiece[currPiece] || [])?.map((move, i) => {
     const moveName = getMoveName(move);
     return { id: moveName, name: moveName, val: move };
   });
+
+  useEffect(() => {
+    if (moveOptions?.length) {
+      setSelectedMoveOption(moveOptions[0]);
+      onSelect(moveOptions[0].val, movesByPiece[currPiece]);
+    }
+  }, [filters]);
 
   const handleSelectPiece = (pieceOption: SelectOption<PieceIndex>) => {
     onFilter({ piece: pieceOption?.val || null });
@@ -34,16 +44,21 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
 
   const handleSelectMove = (moveOption: SelectOption<GameMove>) => {
     onSelect && onSelect(moveOption?.val, movesByPiece[currPiece]);
+    setSelectedMoveOption(moveOption);
   };
+
+  // Render
+  const pieceSelectPlaceholder = pieceOptions?.length ? 'Click to select' : 'No moves to make';
+  const selectedPieceOption = pieceIndexOption(filters?.piece);
  
   return <div className="flex flex-row flex-wrap gap-2">
     <label>
       Select a piece
-      <Select key={moves?.toString()} options={pieceOptions} placeholder='No pieces available' onSelect={handleSelectPiece} />
+      <Select key="pieceSelect" selectedOption={selectedPieceOption} options={pieceOptions} placeholder={pieceSelectPlaceholder} onSelect={handleSelectPiece} />
     </label>
     <label>
       Select an action
-      <Select key={currPiece} options={moveOptions} placeholder='Click to select an action' onSelect={handleSelectMove} />
+      <Select key="moveSelect" selectedOption={selectedMoveOption} options={moveOptions} placeholder='Click to select' onSelect={handleSelectMove} />
     </label>
   </div>;
 }
@@ -97,4 +112,8 @@ function getMoveTypeOrder(moveType: GameMoveType): number {
     default:
       return 5;
   }
+}
+
+function pieceIndexOption(pieceIndex: PieceIndex): SelectOption<PieceIndex> {
+  return { id: pieceIndex, name: pieceIndex, val: pieceIndex };
 }
