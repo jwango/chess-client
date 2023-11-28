@@ -94,11 +94,5 @@ function parseListGames(payload: ResponseBody<unknown>): ListGamesResponse['data
   if (payload?.data == null || !Array.isArray(payload?.data)) {
     return null;
   }
-  return payload.data.map(item => {
-    if (typeof item === 'string') {
-      return item;
-    } else {
-      return item?.gameId;
-    }
-  });
+  return payload.data;
 }

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export const LobbyPage = () => {
-  const { data: gameIds, isLoading, isError, error, refetch } = useListGamesQuery();
+  const { data: games, isLoading, isError, error, refetch } = useListGamesQuery();
   const { toastState, show } = useToastState();
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export const LobbyPage = () => {
         {isLoading && <p>Loading...</p>}
         {!isLoading && 
           <ul>
-            {gameIds?.map(gameId => (
-              <li key={gameId}><Link to={`games/${gameId}`}>{gameId}</Link></li>
-            ))}
+            {games?.map(game => 
+              <li key={game.gameId}><Link to={`games/${game.gameId}`}>{game.gameId}</Link> [{game.currentState}]</li>
+            )}
           </ul>
         }
       </pre>
