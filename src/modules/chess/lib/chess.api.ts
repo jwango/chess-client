@@ -1,5 +1,5 @@
 import { useAuth } from '@auth';
-import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse, RegisterPlayerResponse, StartGameResponse, SubmitMoveResponse, GameMove } from './dto';
+import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse, RegisterPlayerResponse, StartGameResponse, SubmitMoveResponse, GameMove, ResponseBody } from './dto';
 import axios, { AxiosRequestConfig } from 'axios';
 import { CognitoTokenResponseBody } from 'src/modules/auth/lib/auth.api';
 
@@ -22,9 +22,12 @@ export function useChessApi(): ChessApi {
   });
 
   async function listGames(): Promise<ListGamesResponse['data']> {
-    const config = buildConfig(tokenData.id_token);
+    const config: AxiosRequestConfig = {
+      ...buildConfig(tokenData.id_token),
+      params: { isMine: "true" }
+    };
     const axiosResponse = await axiosInstance.get('/games', config);
-    return axiosResponse.data?.data;
+    return parseListGames(axiosResponse.data);
   }
 
   async function getGame(gameId: string): Promise<GetGameResponse['data']>{
@@ -85,4 +88,17 @@ function buildConfig(token: string): AxiosRequestConfig {
   return {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' }
   };
+}
+
+function parseListGames(payload: ResponseBody<unknown>): ListGamesResponse['data'] {
+  if (payload?.data == null || !Array.isArray(payload?.data)) {
+    return null;
+  }
+  return payload.data.map(item => {
+    if (typeof item === 'string') {
+      return item;
+    } else {
+      return item?.id;
+    }
+  });
 }

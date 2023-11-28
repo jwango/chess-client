@@ -1,5 +1,5 @@
 /** Response types */
-interface ResponseBody<T> {
+export interface ResponseBody<T> {
   data: T;
 }
 
