@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import {
   QueryClient,
   QueryClientProvider,
@@ -22,9 +23,31 @@ const queryClient = new QueryClient();
 export const App = () => {
   const [activeThemeKey, setActiveThemeKey] = useState<string>("Default");
 
+  const themeOption = THEME_OPTIONS[activeThemeKey];
+  const themeColor = themeOption.colors.primary["300"];
+
   return <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <main id="headlessui-portal-root" className="bg-light text-light min-h-screen" style={themeToStyle(THEME_OPTIONS[activeThemeKey])}>
+      <Helmet>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        <meta name='theme-color' content={themeColor} />
+        <link rel='manifest' href='/manifest.json' />
+
+        <title>Chess by jwango</title>
+        <meta name='description' content="Simple chess client" />
+        <meta name='keywords' content="chess jwango" />
+        <meta name='author' content="Joshua Wang"/>
+
+        <meta name='mobile-web-app-capable' content='yes'></meta>
+        <link rel='icon' type='image/png' href='/favicon.ico' sizes='16x16' />
+        <link rel='icon' type='image/png' href='/favicon.ico' sizes='24x24' />
+        <link rel='icon' type='image/png' href='/favicon.ico' sizes='32x32' />
+        <link rel='icon' type='image/png' href='/favicon.ico' sizes='64x64' />
+        <link rel='apple-touch-icon' href='/app-icon.png' />
+        <link rel='mask-icon' href='/mask-icon.svg' color={themeColor}/>
+        <link rel='shortcut icon' href='/app-icon.png' />
+      </Helmet>
+      <main id="headlessui-portal-root" className="bg-light text-light min-h-screen" style={themeToStyle(themeOption)}>
         <nav className="bg-primary-300 gutters py-1">
           <Link className="px-2 text-primary-300" to="/">Home</Link>
           <Link className="px-2 text-primary-300" to="/carriage">Carriage</Link>
