@@ -54,11 +54,24 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
   return <div className="flex flex-row flex-wrap gap-2">
     <label>
       Select a piece
-      <Select key="pieceSelect" selectedOption={selectedPieceOption} options={pieceOptions} placeholder={pieceSelectPlaceholder} onSelect={handleSelectPiece} />
+      <Select
+        classNames={ { Active: 'bg-red-200 text-red-800', Selected: 'bg-red-200 text-red-800' } }
+        key="pieceSelect"
+        selectedOption={selectedPieceOption}
+        options={pieceOptions}
+        placeholder={pieceSelectPlaceholder}
+        onSelect={handleSelectPiece}
+      />
     </label>
     <label>
       Select an action
-      <Select key="moveSelect" selectedOption={selectedMoveOption} options={moveOptions} placeholder='Click to select' onSelect={handleSelectMove} />
+      <Select
+        key="moveSelect"
+        selectedOption={selectedMoveOption}
+        options={moveOptions}
+        placeholder='Click to select'
+        onSelect={handleSelectMove}
+      />
     </label>
   </div>;
 }
