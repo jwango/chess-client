@@ -1,6 +1,7 @@
 import { useQuery, QueryKey } from "@tanstack/react-query";
 import { useChessApi } from "./chess.api";
 import { useAuth } from "@auth";
+import { GameInfo } from "./dto";
 
 // Query Key generator functions
 export function getListGamesQueryKey(): QueryKey { return ["listGames"]; }
@@ -22,7 +23,7 @@ export function useListGamesQuery() {
     queryKey: getListGamesQueryKey(),
     queryFn: () => {
       if (!isLoggedIn) {
-        return [];
+        return [] as GameInfo[];
       }
       return chessApi.listGames();
     }

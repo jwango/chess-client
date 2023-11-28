@@ -1,7 +1,9 @@
 import { GameSpace, PieceType } from "./dto";
+import nounMap from "./game-aliases.json";
 
 // Format of long algebraic notation
 export type PieceIndex = string;
+const NOUN_MAP = nounMap as unknown as Record<string, string[]>;
 
 // https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 export function getPieceLetter(pieceType: PieceType): string {
@@ -74,4 +76,16 @@ export function getSpaceCoord(space: GameSpace): string {
     return '';
   }
   return `${String.fromCharCode(CHAR_CODE_a + space.column)}${space.row + 1}`;
+}
+
+export function getGameName(gameId: string): string {
+  const hash = gameId.split("-")[0] || "";
+  const letter = gameId.match(/[a-z]/g)[0];
+  const numericStr = gameId.match(/[0-9]/g).join('');
+  const i = +(numericStr.substring(0, 3));
+  const j = i + 10;
+  const words = NOUN_MAP[letter];
+  const firstWord = words[i % words.length];
+  const secondWord = words[j % words.length];
+  return `${firstWord}ful ${secondWord} ${hash}`
 }

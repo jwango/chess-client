@@ -3,7 +3,7 @@ export interface ResponseBody<T> {
   data: T;
 }
 
-export type ListGamesResponse = ResponseBody<string[]>;
+export type ListGamesResponse = ResponseBody<GameInfo[]>;
 
 export type GetGameResponse = ResponseBody<GameInfo>;
 

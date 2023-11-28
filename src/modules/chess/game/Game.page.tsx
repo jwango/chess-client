@@ -7,6 +7,7 @@ import { Toast } from "@shared";
 import { Registration } from "./Registration";
 import { useAuth } from "@auth";
 import { Play } from "./Play";
+import { getGameName } from "../lib/util";
 
 export const GamePage = () => {
   const { gameId } = useParams();
@@ -28,7 +29,7 @@ export const GamePage = () => {
   return <AuthGuard>
     <Toast {...toastState} />
     <div className="gutters">
-      <h1>Game {gameId}</h1>
+      <h1>{getGameName(gameId)}</h1>
       {isLoadingData && <p>Loading...</p>}
       {!isLoadingGameInfo && gameInfo?.currentState === 'WAITING' && <Registration gameInfo={gameInfo} myPlayer={myPlayer} />}
       {!isLoadingGameInfo && gameInfo?.currentState === 'RUNNING' && <Play gameInfo={gameInfo} myPlayer={myPlayer} />}
