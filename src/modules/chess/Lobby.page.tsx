@@ -4,6 +4,7 @@ import { useListGamesQuery } from "./lib/chess.query";
 import { useToastState } from "@shared/lib";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getGameName } from "./lib/util";
 
 export const LobbyPage = () => {
   const { data: games, isLoading, isError, error, refetch } = useListGamesQuery();
@@ -25,7 +26,7 @@ export const LobbyPage = () => {
         {!isLoading && 
           <ul>
             {games?.map(game => 
-              <li key={game.gameId}><Link to={`games/${game.gameId}`}>{game.gameId}</Link> [{game.currentState}]</li>
+              <li key={game.gameId}><Link to={`games/${game.gameId}`}>{getGameName(game.gameId)}</Link> [{game.currentState}]</li>
             )}
           </ul>
         }

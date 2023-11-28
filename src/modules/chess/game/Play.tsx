@@ -46,17 +46,25 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     setFilters({ piece: null });
   };
 
+  const currentColor = state?.currentPlayerTurn === 0 ? 'white' : 'black';
+  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.'
+
+  if (!isRunning) {
+    return null;
+  }
+
   return <>
-    {isRunning && <div>
-      <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
+    <div>
       {isLoadingMoves && <span>Loading moves...</span>}
       {isLoadingState && <span className="ml-2">Loading game state...</span>}
-    </div>}
-    {isRunning && <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>}
-    {isRunning && !isLoadingMoves && <>
-      <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
+      {!isLoadingMoves && !isLoadingState && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
+    </div>
+    <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
+    <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
+    <div>
+      <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
       <button className="mt-2" type="button" disabled={!canSubmit} onClick={handleSubmit}>Submit move</button>
-    </>}
+    </div>
   </>;
 }
 
