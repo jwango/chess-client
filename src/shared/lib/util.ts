@@ -51,6 +51,7 @@ export interface Theme {
   backgroundColor: Record<string, Palette>;
   colors: Record<string, Palette>;
   textColor: Record<string, Palette>;
+  isDeprecated?: boolean;
 }
 
 function paletteMapToStyle(paletteMap: Record<string, Palette>, prefix: string): CSSProperties {

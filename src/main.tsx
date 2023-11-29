@@ -1,37 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Theme, themeToStyle } from "./shared/lib/util";
-import alternateTheme from './themes/alternate.theme.json';
-import defaultTheme from './themes/default.theme.json';
+import arBlueTheme from './themes/argentine-blue.theme.json';
+import sageTheme from './themes/sage.theme.json';
 import { Helmet } from "react-helmet";
 import { useAuth } from "./modules/auth/lib/useAuth.hook";
 import { Avatar } from "./shared/components/Avatar";
 
-const THEME_OPTIONS: Record<string, Theme> = {
-  "Default": defaultTheme,
-  "Alternate": alternateTheme
+enum ThemeKey {
+  Default = 'Default',
+  Alternate = 'Alternate',
+  Sage = 'Sage',
+  ArgnetineBlue = 'Argentine Blue'
+}
+
+const THEME_OPTIONS: Record<ThemeKey, Theme> = {
+  "Default": { ...sageTheme, isDeprecated: true },
+  "Alternate": { ...arBlueTheme, isDeprecated: true },
+  "Sage": sageTheme,
+  "Argentine Blue": arBlueTheme
 };
 
 const THEME_STORAGE_KEY = "user.preferences.theme";
 export const Main = () => {
-  const [activeThemeKey, setActiveThemeKey] = useState<string>("Default");
+  const [activeThemeKey, setActiveThemeKey] = useState<ThemeKey>(ThemeKey.Sage);
   const { userInfo } = useAuth();
 
-  // load any saved theme
+  const handleChangeTheme = useCallback((theme: string) => {
+    const themeKey = parseThemeKey(theme);
+    setActiveThemeKey(themeKey);
+    localStorage.setItem(THEME_STORAGE_KEY, themeKey);
+  }, [parseThemeKey, setActiveThemeKey]);
+
+  // load the saved theme and re-save whatever was parsed to clean any old themes
   useEffect(() => {
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    const savedTheme = parseThemeKey(localStorage.getItem(THEME_STORAGE_KEY));
     if (savedTheme) {
-      setActiveThemeKey(savedTheme);
+      handleChangeTheme(savedTheme);
     }
   }, [setActiveThemeKey]);
 
   const themeOption = THEME_OPTIONS[activeThemeKey];
   const themeColor = themeOption.colors.primary["300"];
-
-  const handleChangeTheme = (theme: string) => {
-    setActiveThemeKey(theme);
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
-  }
 
   return <main id="headlessui-portal-root" className="bg-light text-light h-full overflow-auto" style={themeToStyle(themeOption)}>
     <Helmet>
@@ -62,8 +72,11 @@ export const Main = () => {
         <label className="text-primary-300 text-base align-top ml-4">
           Theme&nbsp;
           <select className="py-1 text-xs text-light" value={activeThemeKey} onChange={e => handleChangeTheme(e.currentTarget.value)}>
-            <option value={"Default"}>Default</option>
-            <option value={"Alternate"}>Alternate</option>
+            {Object.keys(THEME_OPTIONS)
+              .map((themeKey: ThemeKey) => ({ value: themeKey, name: themeKey, show: !THEME_OPTIONS[themeKey].isDeprecated } ))
+              .filter(o => o.show)
+              .map(o => <option key={o.value} value={o.value}>{o.name}</option>)
+            };
           </select>
         </label>
       </div>
@@ -73,3 +86,17 @@ export const Main = () => {
     </div>
   </main>;
 };
+
+function parseThemeKey(key: string): ThemeKey {
+  switch (key) {
+    case ThemeKey.Default:
+      return ThemeKey.Sage;
+    case ThemeKey.Alternate:
+      return ThemeKey.ArgnetineBlue;
+    case ThemeKey.Sage:
+    case ThemeKey.ArgnetineBlue:
+      return key;
+    default:
+      return ThemeKey.Sage;
+  }
+}
