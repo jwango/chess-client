@@ -1,5 +1,7 @@
 import { GameInfo, GamePlayer } from "../lib/dto";
 import { useRegisterMyselfMutation, useStartGameMutation } from "../lib/chess.mutation";
+import { useToastState } from "@shared/lib";
+import { Toast } from "@shared";
 
 interface RegistrationProps {
   gameInfo: GameInfo;
@@ -9,6 +11,7 @@ interface RegistrationProps {
 export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
   const registerMutation = useRegisterMyselfMutation();
   const startMutation = useStartGameMutation();
+  const { toastState, show } = useToastState();
 
   const isWaiting = gameInfo?.currentState === 'WAITING';
   const numPlayers = gameInfo?.registeredPlayers?.length || 0;
@@ -24,9 +27,11 @@ export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
 
   const handleCopyInvite = () => {
     navigator.clipboard.writeText(window.location.href);
+    show({ color: 'info', title: '', message: 'Link copied' });
   }
 
   return <>
+    <Toast {...toastState} />
     { canInvite && <p>You are currently registered. Invite a friend!</p>}
     { canRegister && <p>Register using the buttons below. {registerMutation.isPending && "Registering..."}</p> }
     { canStart  && <p>Let's get this party started! {startMutation.isPending && "Starting..."}</p> }
