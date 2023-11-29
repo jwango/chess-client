@@ -70,6 +70,8 @@ export function getPieceIndex(pieceType: PieceType, space: GameSpace): PieceInde
 
 const CHAR_CODE_a = 97;
 
+const GAME_NAME_SUFFIXES = ['ful', 'ing', 'ary', 'ers', 'ily'];
+
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Naming_the_squares
 export function getSpaceCoord(space: GameSpace): string {
   if (!space) {
@@ -79,13 +81,22 @@ export function getSpaceCoord(space: GameSpace): string {
 }
 
 export function getGameName(gameId: string): string {
-  const hash = gameId.split("-")[0] || "";
+  // Grab a letter to index the NOUN_MAP
   const letter = gameId.match(/[a-z]/g)[0];
-  const numericStr = gameId.match(/[0-9]/g).join('');
-  const i = +(numericStr.substring(0, 3));
-  const j = i + 10;
   const words = NOUN_MAP[letter];
+
+  // Choose a number to index the list of words for the letter
+  const numericStr = gameId.match(/[0-9]/g).join('');
+  const i = +(numericStr.substring(0, 5));
   const firstWord = words[i % words.length];
+  const firstWordSuffix = GAME_NAME_SUFFIXES[i % GAME_NAME_SUFFIXES.length];
+
+  // Choose another index for the second word
+  const j = i + 10;
   const secondWord = words[j % words.length];
-  return `${firstWord}ful ${secondWord} ${hash}`
+  
+  // Pick a short hash
+  const hash = gameId.split("-")[0] || "";
+
+  return `${firstWord}${firstWordSuffix} ${secondWord} ${hash}`
 }
