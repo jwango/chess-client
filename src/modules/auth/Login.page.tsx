@@ -51,7 +51,7 @@ export const LoginPage = () => {
   return <div className="gutters">
     {errorMessage && <p>{errorMessage}</p>}
     {!hasCode  && <p>Redirecting you to SSO login...</p>}
-    {(hasCode && !tokenData) && <p>Exchanging your code {code} for a token...</p>}
+    {(hasCode && !tokenData) && <p>Logging you in...</p>}
     {userInfo && <p>Welcome {userInfo.name}!</p>}
   </div>;
 };
