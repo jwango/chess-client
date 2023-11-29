@@ -47,7 +47,7 @@ export function useStartGameMutation() {
   });
 }
 
-export function useSubmitMoveMutation() {
+export function useSubmitMoveMutation(onSuccess?: SuccessHandler<GameState>) {
   const chessApi = useChessApi();
   const { isLoggedIn } = useAuth();
   const queryClient = useQueryClient();
@@ -62,11 +62,12 @@ export function useSubmitMoveMutation() {
     onSuccess: (data: GameState, { gameId }) => {
       queryClient.setQueryData(getGameStateQueryKey(gameId), data);
       queryClient.setQueryData(getMovesQueryKey(gameId), []);
+      onSuccess && onSuccess(data);
     }
   });
 }
 
-export function useCreateGameMutation(onSuccess: SuccessHandler<GameInfo> = undefined) {
+export function useCreateGameMutation(onSuccess?: SuccessHandler<GameInfo>) {
   const chessApi = useChessApi();
   const { isLoggedIn } = useAuth();
   const queryClient = useQueryClient();

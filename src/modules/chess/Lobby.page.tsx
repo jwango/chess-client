@@ -14,7 +14,7 @@ export const LobbyPage = () => {
   const { toastState, show } = useToastState();
   
   const handleCreateGameSuccess = useCallback((gameInfo: GameInfo) => {
-    show({ color: 'success', title: 'Success!', message: `Game ${getGameName(gameInfo.gameId)} was created.`});
+    show({ color: 'success', title: '', message: `Game ${getGameName(gameInfo.gameId)} was created.`});
   }, [getGameName, show]);
   const createGameMutation = useCreateGameMutation(handleCreateGameSuccess);
 

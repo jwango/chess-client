@@ -1,11 +1,13 @@
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useGetGameStateQuery, useGetMovesQuery } from "../lib/chess.query";
-import { GameInfo, GameMove, GamePlayer, GameSpace } from "../lib/dto";
+import { GameInfo, GameMove, GamePlayer, GameSpace, GameState } from "../lib/dto";
 import { MoveInputField, MoveInputFilters } from "./MoveInputField";
 import { Board } from "./Board";
 import { useSubmitMoveMutation } from "../lib/chess.mutation";
 import { getPieceIndex } from "../lib/util";
+import { useToastState } from "@shared/lib";
+import { Toast } from "@shared";
 
 interface PlayProps {
   gameInfo: GameInfo;
@@ -13,13 +15,23 @@ interface PlayProps {
 }
 
 export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
+  // state
   const [selectedMove, setSelectedMove] = useState<GameMove>(null);
   const [filters, setFilters] = useState<MoveInputFilters>({ piece: null });
   const [movesBySelectedPiece, setMovesBySelectedPiece] = useState<GameMove[]>([]);
+  const { toastState, show } = useToastState();
+
+  // queries
   const { data: state, isFetching: isLoadingState, refetch: refetchState } = useGetGameStateQuery(gameInfo?.gameId);
   const { data: moves, isFetching: isLoadingMoves, refetch: refetchMoves } = useGetMovesQuery(gameInfo?.gameId);
-  const submitMoveMutation = useSubmitMoveMutation();
 
+  // mutations
+  const handleSubmitMoveSuccess = useCallback(() => {
+    show({ color: 'success', title: '', message: 'Your move was accepted.'});
+  }, [show]);
+  const submitMoveMutation = useSubmitMoveMutation(handleSubmitMoveSuccess);
+
+  // render
   const isRunning = gameInfo?.currentState === 'RUNNING';
   const canSubmit = isRunning && !isLoadingMoves && !isLoadingState && !!selectedMove;
 
@@ -47,17 +59,20 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
   };
 
   const currentColor = state?.currentPlayerTurn === 0 ? 'white' : 'black';
-  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.'
+  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.';
+  const isReady = !isLoadingMoves && !isLoadingState && !submitMoveMutation.isPending;
 
   if (!isRunning) {
     return null;
   }
 
   return <>
+    <Toast {...toastState} />
     <div>
-      {isLoadingMoves && <span>Loading moves...</span>}
-      {isLoadingState && <span className="ml-2">Loading game state...</span>}
-      {!isLoadingMoves && !isLoadingState && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
+      {isLoadingMoves && <span className="mr-2">Loading moves...</span>}
+      {isLoadingState && <span className="mr-2">Loading game state...</span>}
+      {submitMoveMutation.isPending && <span>Submitting your move...</span>}
+      {isReady && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
     <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
     <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
