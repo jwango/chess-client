@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import "./tailwind.css";
 import App from './app';
 import { LoginPage, LogoutPage } from '@auth';
-import { CarriagePage } from '@home';
 import { LobbyPage } from './modules/chess/Lobby.page';
 import { GamePage } from './modules/chess/game/Game.page';
 
@@ -16,13 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <LobbyPage />,
-        children: [
-          {
-            path: "carriage",
-            element: <CarriagePage />
-          }
-        ]
+        element: <LobbyPage />
       },
       {
         path: "games/:gameId",

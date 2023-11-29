@@ -17,7 +17,7 @@ export const AuthGuard = ({ children }: PropsWithChildren<{}>) => {
 
   return <>
     {isLoggedIn && children}
-    {!isLoggedIn && <div>Redirecting to login...</div>}
+    {!isLoggedIn && <div className="gutters">Redirecting to login...</div>}
   </>
 };
 

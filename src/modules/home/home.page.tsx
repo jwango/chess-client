@@ -1,6 +1,5 @@
 import { useOutlet } from "react-router";
 
-import { Panel } from "@shared";
 import AuthGuard from "../auth/components/auth-guard.component";
 
 interface Props {
@@ -13,7 +12,6 @@ export const HomePage = ({ name }: Props) => {
   return <AuthGuard>
     <div className="gutters">
       Welcome home, {name}
-      {outlet && <Panel>{outlet}</Panel>}
     </div>
   </AuthGuard>
 };
