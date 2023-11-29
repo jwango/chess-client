@@ -1,5 +1,5 @@
 import { useAuth } from '@auth';
-import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse, RegisterPlayerResponse, StartGameResponse, SubmitMoveResponse, GameMove, ResponseBody } from './dto';
+import { ListGamesResponse, GetGameResponse, GetGameStateResponse, GetPlayersResponse, GetMovesResponse, RegisterPlayerResponse, StartGameResponse, SubmitMoveResponse, GameMove, ResponseBody, CreateGameResponse } from './dto';
 import axios, { AxiosRequestConfig } from 'axios';
 import { CognitoTokenResponseBody } from 'src/modules/auth/lib/auth.api';
 
@@ -13,6 +13,7 @@ export interface ChessApi {
   registerMyself(gameId: string): Promise<RegisterPlayerResponse['data']>;
   startGame(gameId: string): Promise<StartGameResponse['data']>;
   submitMove(gameId: string, move: GameMove): Promise<SubmitMoveResponse['data']>;
+  createGame(): Promise<CreateGameResponse['data']>;
 }
 
 export function useChessApi(): ChessApi {
@@ -55,20 +56,26 @@ export function useChessApi(): ChessApi {
   }
 
   async function registerMyself(gameId: string): Promise<RegisterPlayerResponse['data']>{
-    const config = { ...buildConfig(tokenData.id_token) };
+    const config = buildConfig(tokenData.id_token);
     const axiosResponse = await axiosInstance.post(`/games/${gameId}/players`, { userId: "myself" }, config);
     return axiosResponse.data?.data;
   }
 
   async function startGame(gameId: string): Promise<RegisterPlayerResponse['data']>{
-    const config = { ...buildConfig(tokenData.id_token) };
+    const config = buildConfig(tokenData.id_token);
     const axiosResponse = await axiosInstance.post(`/games/${gameId}`, {}, config);
     return axiosResponse.data?.data;
   }
 
   async function submitMove(gameId: string, move: GameMove): Promise<SubmitMoveResponse['data']>{
-    const config = { ...buildConfig(tokenData.id_token) };
+    const config = buildConfig(tokenData.id_token);
     const axiosResponse = await axiosInstance.post(`/games/${gameId}/moves`, move, config);
+    return axiosResponse.data?.data;
+  }
+
+  async function createGame(): Promise<CreateGameResponse['data']> {
+    const config = buildConfig(tokenData.id_token);
+    const axiosResponse = await axiosInstance.post('/games', {}, config);
     return axiosResponse.data?.data;
   }
 
@@ -80,7 +87,8 @@ export function useChessApi(): ChessApi {
     getMoves,
     registerMyself,
     startGame,
-    submitMove
+    submitMove,
+    createGame
   };
 }
 
