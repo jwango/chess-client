@@ -61,8 +61,8 @@ export const App = () => {
         <link rel='mask-icon' href='/mask-icon.svg' color={themeColor}/>
         <link rel='shortcut icon' href='/app-icon.png' />
       </Helmet>
-      <main id="headlessui-portal-root" className="bg-light text-light min-h-screen" style={themeToStyle(themeOption)}>
-        <nav className="bg-primary-300 gutters py-1">
+      <main id="headlessui-portal-root" className="bg-light text-light h-full overflow-auto" style={themeToStyle(themeOption)}>
+        <nav className="bg-primary-300 gutters py-1 h-[32px]">
           <Link className="px-2 text-primary-300" to="/">Home</Link>
           <Link className="px-2 text-primary-300" to="/logout">Logout</Link>
 
@@ -74,7 +74,9 @@ export const App = () => {
             </select>
           </label>
         </nav>
-        <Outlet />
+        <div className="mt-[-32px] pt-[32px]">
+          <Outlet />
+        </div>
       </main>
     </AuthProvider>
   </QueryClientProvider>
