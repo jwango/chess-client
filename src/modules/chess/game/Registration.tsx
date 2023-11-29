@@ -1,5 +1,4 @@
 import { GameInfo, GamePlayer } from "../lib/dto";
-import { DebugQuery } from "@shared";
 import { useRegisterMyselfMutation, useStartGameMutation } from "../lib/chess.mutation";
 
 interface RegistrationProps {
@@ -23,15 +22,14 @@ export const Registration = ({ gameInfo, myPlayer }: RegistrationProps) => {
   // I can invite people to a game I am currently a part of
   const canInvite = isWaiting && numPlayers < 2 && !!myPlayer;
 
-  const isLoading = registerMutation.isPending || startMutation.isPending;
-
   const handleCopyInvite = () => {
     navigator.clipboard.writeText(window.location.href);
   }
 
   return <>
-    <DebugQuery isLoading={isLoading} data={gameInfo} />
-
+    { canInvite && <p>You are currently registered. Invite a friend!</p>}
+    { canRegister && <p>Register using the buttons below. {registerMutation.isPending && "Registering..."}</p> }
+    { canStart  && <p>Let's get this party started! {startMutation.isPending && "Starting..."}</p> }
     <div className="flex flex-row gap-2">
       <button
         type="button"
