@@ -74,7 +74,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
       {submitMoveMutation.isPending && <span>Submitting your move...</span>}
       {isReady && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
-    <Board gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
+    <Board gameState={state} myPlayer={myPlayer} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
     <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
     <div>
       <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
