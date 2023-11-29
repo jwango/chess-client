@@ -10,7 +10,7 @@ import { themeToStyle, Theme } from "@shared/lib";
 import './app.css';
 import alternateTheme from './themes/alternate.theme.json';
 import defaultTheme from './themes/default.theme.json';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthProvider } from "./modules/auth/lib/auth.provider";
 
 const THEME_OPTIONS: Record<string, Theme> = {
@@ -19,12 +19,26 @@ const THEME_OPTIONS: Record<string, Theme> = {
 };
 
 const queryClient = new QueryClient();
+const THEME_STORAGE_KEY = "user.preferences.theme";
 
 export const App = () => {
   const [activeThemeKey, setActiveThemeKey] = useState<string>("Default");
 
+  // load any saved theme
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme) {
+      setActiveThemeKey(savedTheme);
+    }
+  }, [setActiveThemeKey]);
+
   const themeOption = THEME_OPTIONS[activeThemeKey];
   const themeColor = themeOption.colors.primary["300"];
+
+  const handleChangeTheme = (theme: string) => {
+    setActiveThemeKey(theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }
 
   return <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -55,7 +69,7 @@ export const App = () => {
 
           <label className="text-primary-300 absolute right-1 top-1">
             Theme&nbsp;
-            <select className="py-1 text-xs text-light" value={activeThemeKey} onChange={e => setActiveThemeKey(e.currentTarget.value)}>
+            <select className="py-1 text-xs text-light" value={activeThemeKey} onChange={e => handleChangeTheme(e.currentTarget.value)}>
               <option value={"Default"}>Default</option>
               <option value={"Alternate"}>Alternate</option>
             </select>
