@@ -7,7 +7,7 @@ import styles from './Board.module.css';
 // Board component
 interface BoardProps {
   gameState: GameState;
-  myPlayer: GamePlayer;
+  isBlack?: boolean;
   selectedMove?: GameMove;
   allowedMoves?: GameMove[];
   onClickSpace?: (space: GameSpace) => void;
@@ -17,10 +17,8 @@ const EMPTY_BOARD = getEmptyBoard();
 const INDICES_ASC = [0, 1, 2, 3, 4, 5, 6, 7];
 const INDICES_DESC = [7, 6, 5, 4, 3, 2, 1, 0];
 
-export const Board = ({ gameState, myPlayer, selectedMove, allowedMoves, onClickSpace }: BoardProps) => {
+export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, onClickSpace }: BoardProps) => {
   const board = gameState?.chessBoard || EMPTY_BOARD;
-  // show view from Black if it is black's turn and my player is the black player
-  const isBlack = gameState?.currentPlayerTurn === 1 && myPlayer?.id === gameState?.currentPlayerId;
 
   return <div>
     <div className={`grid grid-cols-10 w-[288px] ${isBlack ? 'rotate-180' : ''}`}>

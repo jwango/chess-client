@@ -61,6 +61,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
   const currentColor = state?.currentPlayerTurn === 0 ? 'white' : 'black';
   const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.';
   const isReady = !isLoadingMoves && !isLoadingState && !submitMoveMutation.isPending;
+  const isBlack = gameInfo?.registeredPlayers[1] === myPlayer?.id;
 
   if (!isRunning) {
     return null;
@@ -74,7 +75,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
       {submitMoveMutation.isPending && <span>Submitting your move...</span>}
       {isReady && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
-    <Board gameState={state} myPlayer={myPlayer} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
+    <Board isBlack={isBlack} gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
     <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
     <div>
       <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
