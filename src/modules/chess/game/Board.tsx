@@ -22,7 +22,7 @@ export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, 
   const board = gameState?.chessBoard || EMPTY_BOARD;
 
   return <div>
-    <div className={`grid grid-cols-10 w-[288px] ${isBlack ? 'rotate-180' : ''}`}>
+    <div className={`grid grid-cols-10 w-[400px] ${isBlack ? 'rotate-180' : ''}`}>
       <HorizontalAxis isFlipped={true} tickClassname={isBlack ? 'text-black' : 'text-gray-300'} />
       {INDICES_DESC.map(row => {
         const rowPieces = board[row];
@@ -76,14 +76,14 @@ const Space = ({ className = '', row, column, pieceType, isFlipped = false, onCl
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[32px] text-3xl text-center leading-none box-border relative border-[3px] border-transparent
+      `h-[40px] text-3xl sm:text-4xl text-center leading-none box-border relative border-[4px] border-transparent
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${isFlipped ? 'rotate-180' : ''}
       ${className}`
     }
     onClick={() => onClick && onClick()}
   >
-    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-4px] top-[-2px] w-[32px]`}>{getPieceLetter(pieceType) || ''}</span>
+    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-4px] top-[-4px] w-[40px] leading-[40px]`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
 };
 
@@ -93,7 +93,7 @@ interface AxisTickProps {
 }
 
 const AxisTick = ({ className, children }: PropsWithChildren<AxisTickProps>) => {
-  return <div className={`text-center leading-[32px] ${className || ''}`}>{children}</div>
+  return <div className={`text-center leading-[40px] ${className || ''}`}>{children}</div>
 };
 
 // HorizontalAxis component
