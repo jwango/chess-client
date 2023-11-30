@@ -32,7 +32,7 @@ export const LobbyPage = () => {
     <div className='gutters'>
       <h1>Games {isLoading ? <>loading...</> : <>loaded</>}</h1>
       <Toast {...toastState} />
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-2 mb-2">
         <button disabled={isLoading} type='button' onClick={() => refetch()}>Refresh</button>
         <button disabled={isLoading} type='button' onClick={() => createGameMutation.mutate()}>New game</button>
       </div>

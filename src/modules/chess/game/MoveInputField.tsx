@@ -59,10 +59,11 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
   const pieceSelectPlaceholder = pieceOptions?.length ? 'Click to select' : 'No moves to make';
   const selectedPieceOption = pieceIndexOption(filters?.piece);
  
-  return <div className="flex flex-row flex-wrap gap-2">
+  return <div>
     <label>
       Select a piece
       <Select
+        className="mb-4"
         classNames={ { Active: 'bg-red-200 text-red-800', Selected: 'bg-red-200 text-red-800' } }
         key="pieceSelect"
         selectedOption={selectedPieceOption}
@@ -74,6 +75,7 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
     <label>
       Select an action
       <Select
+        className="mb-4"
         key="moveSelect"
         selectedOption={selectedMoveOption}
         options={moveOptions}

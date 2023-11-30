@@ -20,7 +20,7 @@
   }
 
   button, [type='button'], [type='reset'], [type='submit'] {
-    border-radius: theme('borderRadius.sm');
+    border-radius: theme('borderRadius.md');
     background-color: theme('colors.secondary.300');
     padding: theme('spacing.1') theme('spacing.2');
     min-width: 64px;
