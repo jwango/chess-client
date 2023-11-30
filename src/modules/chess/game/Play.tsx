@@ -58,8 +58,8 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     setFilters({ piece: null });
   };
 
-  const currentColor = state?.currentPlayerTurn === 0 ? 'white' : 'black';
-  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.';
+  const currentColor = state?.currentPlayerTurn === 0 ? 'White' : 'Black';
+  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit a move.' : 'Please wait.';
   const isReady = !isLoadingMoves && !isLoadingState && !submitMoveMutation.isPending;
   const isBlack = gameInfo?.registeredPlayers[1] === myPlayer?.id;
 
@@ -73,7 +73,7 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
       {isLoadingMoves && <span className="mr-2">Loading moves...</span>}
       {isLoadingState && <span className="mr-2">Loading game state...</span>}
       {submitMoveMutation.isPending && <span>Submitting your move...</span>}
-      {isReady && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
+      {isReady && <p>{currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
     <Board isBlack={isBlack} gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
     <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
