@@ -14,6 +14,7 @@ const DEFAULT_CLASSNAMES: SelectClassnames = {
 };
 
 interface SelectProps<T, O extends SelectOption<T>> {
+  className?: string;
   classNames?: Partial<SelectClassnames>;
   options: O[];
   placeholder?: string;
@@ -28,6 +29,7 @@ export interface SelectOption<T> {
 }
 
 export const Select = <T, O extends SelectOption<T>>({
+  className,
   classNames = DEFAULT_CLASSNAMES,
   options,
   placeholder = 'None',
@@ -46,10 +48,10 @@ export const Select = <T, O extends SelectOption<T>>({
     ...classNames
   };
 
-  return <div className="w-72 relative">
+  return <div className={`w-72 relative ${className || ''}`}>
   <Listbox value={selectedOption?.id} onChange={handleSelect} disabled={!options?.length}>
     <Listbox.Button
-      className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left text-base shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-lg hover:bg-white hover:cursor-pointer disabled:bg-gray-200"
+      className="relative w-full cursor-default rounded-lg bg-white text-black py-2 pl-3 pr-10 text-left text-base shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-lg hover:bg-white hover:cursor-pointer disabled:bg-gray-200"
       onClick={() => setOpen(prev => !prev)}
     >
       {selectedOption?.name || placeholder}
@@ -64,7 +66,7 @@ export const Select = <T, O extends SelectOption<T>>({
             key={option.id}
             value={option.id}
             className={({ active, selected }) => 
-              `px-2 py-2 hover:cursor-pointer text-lg
+              `px-2 py-2 hover:cursor-pointer text-lg text-black
               ${(active && !selected) && optionStyles.Active || ''}
               ${selected && optionStyles.Selected || ''}
               `

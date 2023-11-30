@@ -10,6 +10,7 @@ interface BoardProps {
   isBlack?: boolean;
   selectedMove?: GameMove;
   allowedMoves?: GameMove[];
+  allMoves?: GameMove[];
   onClickSpace?: (space: GameSpace) => void;
 }
 
@@ -17,7 +18,7 @@ const EMPTY_BOARD = getEmptyBoard();
 const INDICES_ASC = [0, 1, 2, 3, 4, 5, 6, 7];
 const INDICES_DESC = [7, 6, 5, 4, 3, 2, 1, 0];
 
-export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, onClickSpace }: BoardProps) => {
+export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, allMoves, onClickSpace }: BoardProps) => {
   const board = gameState?.chessBoard || EMPTY_BOARD;
 
   return <div>
@@ -30,15 +31,17 @@ export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, 
           {INDICES_ASC.map(column => {
             const isToSpace = matchesSpace(row, column, selectedMove?.toSpace);
             const isFromSpace = matchesSpace(row, column, selectedMove?.fromSpace);
-            const isAllowedSpace = !!allowedMoves?.find(m => matchesSpace(row, column, m.toSpace));
+            const isAllowedToSpace = !!allowedMoves?.find(m => matchesSpace(row, column, m.toSpace));
+            const isAllowedFromSpace = !!allMoves?.find(m => matchesSpace(row, column, m.fromSpace));
             let spaceClassname = '';
             if (isToSpace) {
               spaceClassname = '!border-blue-500';
-            } else if (isAllowedSpace) {
-              spaceClassname = '!border-red-300';
-            }
-            if (isFromSpace) {
+            } else if (isAllowedToSpace) {
+              spaceClassname = '!border-blue-200';
+            } else if (isFromSpace) {
               spaceClassname = '!border-red-500'
+            } else if (isAllowedFromSpace) {
+              spaceClassname = '!border-red-300';
             }
 
             return <Space

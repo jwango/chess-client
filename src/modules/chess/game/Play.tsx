@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { useGetGameStateQuery, useGetMovesQuery } from "../lib/chess.query";
 import { GameInfo, GameMove, GamePlayer, GameSpace, GameState } from "../lib/dto";
-import { MoveInputField, MoveInputFilters } from "./MoveInputField";
+import { MoveInputField, MoveInputFilters, getMoveName } from "./MoveInputField";
 import { Board } from "./Board";
 import { useSubmitMoveMutation } from "../lib/chess.mutation";
 import { getPieceIndex } from "../lib/util";
@@ -46,11 +46,19 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
   }
 
   const handleClickSpace = (space: GameSpace) => {
-    const moveBySpace = moves?.find(m => isSpaceEquals(m.fromSpace, space));
-    if (moveBySpace) {
-      const pieceIndex = getPieceIndex(moveBySpace.pieceType, space);
-      setFilters({ piece: pieceIndex });
+    const clickedFromSpace = moves?.find(m => isSpaceEquals(m.fromSpace, space));
+    if (clickedFromSpace) {
+      const pieceIndex = getPieceIndex(clickedFromSpace.pieceType, space);
+      setFilters({ piece: pieceIndex, moveName: undefined });
+    } else {
+      const clickedToSpaceMove = movesBySelectedPiece?.find(m => isSpaceEquals(m.toSpace, space));
+      if (clickedToSpaceMove) {
+        const moveName = getMoveName(clickedToSpaceMove);
+        setFilters(prev => ({ ...prev, moveName }));
+        setSelectedMove(clickedToSpaceMove);
+      }
     }
+
   };
 
   const handleSubmit = () => {
@@ -58,8 +66,8 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
     setFilters({ piece: null });
   };
 
-  const currentColor = state?.currentPlayerTurn === 0 ? 'white' : 'black';
-  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit your move.' : 'Please wait.';
+  const currentColor = state?.currentPlayerTurn === 0 ? 'White' : 'Black';
+  const turnMessage = state?.currentPlayerId === myPlayer?.id ? 'Please submit a move.' : 'Please wait.';
   const isReady = !isLoadingMoves && !isLoadingState && !submitMoveMutation.isPending;
   const isBlack = gameInfo?.registeredPlayers[1] === myPlayer?.id;
 
@@ -73,13 +81,17 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
       {isLoadingMoves && <span className="mr-2">Loading moves...</span>}
       {isLoadingState && <span className="mr-2">Loading game state...</span>}
       {submitMoveMutation.isPending && <span>Submitting your move...</span>}
-      {isReady && <p>It is currently {currentColor}&apos;s turn. {turnMessage}</p>}
+      {isReady && <p>{currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
-    <Board isBlack={isBlack} gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} onClickSpace={handleClickSpace}/>
-    <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
-    <div>
-      <button type="button" className="mr-1 mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
-      <button className="mt-2" type="button" disabled={!canSubmit} onClick={handleSubmit}>Submit move</button>
+    <div className="flex flex-row flex-wrap">
+      <Board isBlack={isBlack} gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} allMoves={moves} onClickSpace={handleClickSpace}/>
+      <section className="flex flex-col justify-between">
+        <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
+        <div className="flex flex-row flex-wrap gap-2 justify-end items-baseline">
+          <button type="button" className="mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
+          <button className="mt-2" type="button" disabled={!canSubmit} onClick={handleSubmit}>Submit move</button>
+        </div>
+      </section>
     </div>
   </>;
 }

@@ -20,21 +20,22 @@
   }
 
   button, [type='button'], [type='reset'], [type='submit'] {
-    border-radius: theme('borderRadius.sm');
-    background-color: theme('colors.blue.300');
+    border-radius: theme('borderRadius.md');
+    background-color: theme('colors.secondary.300');
     padding: theme('spacing.1') theme('spacing.2');
     min-width: 64px;
+    color: theme('textColor.secondary.500');
 
     @apply shadow-sm;
   }
 
   button:hover {
-    background-color: theme('colors.blue.400');
+    background-color: theme('colors.secondary.300');
   }
 
   button:disabled {
-    background-color: theme('colors.blue.200');
-    color: theme('colors.gray.500');
+    background-color: theme('colors.gray.200');
+    color: theme('textColor.gray.500');
   }
 
   h1 {
