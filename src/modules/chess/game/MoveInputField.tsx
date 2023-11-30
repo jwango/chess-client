@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export interface MoveInputFilters {
   piece: PieceIndex;
+  moveName?: string;
 }
 
 interface MoveInputFieldProps {
@@ -32,7 +33,11 @@ export const MoveInputField = ({ moves, filters, onFilter, onSelect }: MoveInput
   });
 
   useEffect(() => {
-    if (moveOptions?.length) {
+    const moveForName = moveOptions.find(o => o.id === filters?.moveName);
+    if (moveForName) {
+      setSelectedMoveOption(moveForName);
+    }
+    else if (moveOptions?.length) {
       setSelectedMoveOption(moveOptions[0]);
       onSelect(moveOptions[0].val, movesByPiece[currPiece]);
     } else {
@@ -107,7 +112,7 @@ function getMovesByPiece(moves: GameMove[]): PieceMoveMap {
   return pieceMoveMap;
 }
 
-function getMoveName(move: GameMove): string {
+export function getMoveName(move: GameMove): string {
   return `${move.moveType} ${getPieceIndex(move.otherPieceType, move.toSpace)}`;
 }
 

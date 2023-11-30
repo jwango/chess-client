@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { useGetGameStateQuery, useGetMovesQuery } from "../lib/chess.query";
 import { GameInfo, GameMove, GamePlayer, GameSpace, GameState } from "../lib/dto";
-import { MoveInputField, MoveInputFilters } from "./MoveInputField";
+import { MoveInputField, MoveInputFilters, getMoveName } from "./MoveInputField";
 import { Board } from "./Board";
 import { useSubmitMoveMutation } from "../lib/chess.mutation";
 import { getPieceIndex } from "../lib/util";
@@ -46,11 +46,19 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
   }
 
   const handleClickSpace = (space: GameSpace) => {
-    const moveBySpace = moves?.find(m => isSpaceEquals(m.fromSpace, space));
-    if (moveBySpace) {
-      const pieceIndex = getPieceIndex(moveBySpace.pieceType, space);
-      setFilters({ piece: pieceIndex });
+    const clickedFromSpace = moves?.find(m => isSpaceEquals(m.fromSpace, space));
+    if (clickedFromSpace) {
+      const pieceIndex = getPieceIndex(clickedFromSpace.pieceType, space);
+      setFilters({ piece: pieceIndex, moveName: undefined });
+    } else {
+      const clickedToSpaceMove = movesBySelectedPiece?.find(m => isSpaceEquals(m.toSpace, space));
+      if (clickedToSpaceMove) {
+        const moveName = getMoveName(clickedToSpaceMove);
+        setFilters(prev => ({ ...prev, moveName }));
+        setSelectedMove(clickedToSpaceMove);
+      }
     }
+
   };
 
   const handleSubmit = () => {
