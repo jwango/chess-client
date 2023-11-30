@@ -83,7 +83,7 @@ const Space = ({ className = '', row, column, pieceType, isFlipped = false, onCl
     }
     onClick={() => onClick && onClick()}
   >
-    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-3px] top-[-3px] w-[32px]`}>{getPieceLetter(pieceType) || ''}</span>
+    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-2px] top-[-4px] w-[32px]`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
 };
 
