@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAuth } from "./lib/useAuth.hook";
+import { Page } from "@shared";
 
 export const LogoutPage = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -8,13 +9,13 @@ export const LogoutPage = () => {
     logout();
   }, [logout]);
 
-  return <div className="gutters">
+  return <Page>
     {isLoggedIn && <p>Logging you out...</p>}
     {!isLoggedIn && <>
       <p>You are logged out.</p>
       <a href="/login">Click me to login</a>
     </>}
-  </div>
+  </Page>
 };
 
 export default LogoutPage;

@@ -66,7 +66,7 @@ export const Main = () => {
     <nav className="bg-primary-300 gutters py-1 h-[32px]">
       <Link className="px-2 text-primary-300 align-top" to="/">Home</Link>
 
-      <div className="absolute right-1 top-1">
+      <div className="gutters-absolute-right top-1">
         <Avatar userInfo={userInfo} />
         <Link className="px-2 text-primary-300 align-top" to="/logout">Logout</Link>
         <label className="text-primary-300 text-base align-top ml-4">
