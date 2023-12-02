@@ -44,7 +44,6 @@ export function useAuthApi(): AuthApi {
     if (!codeVerifier) {
       throw new TypeError("Invalid state");
     }
-    console.log("got code verifier", codeVerifier);
     const tokenEndpoint = new URL('oauth2/token', COGNITO_DOMAIN);
     const requestBody = {
       grant_type: 'authorization_code',

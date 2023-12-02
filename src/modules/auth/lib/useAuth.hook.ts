@@ -25,7 +25,6 @@ export const useAuth = () => {
     const state = await buildState(options?.returnTo);
 	  const codeVerifier = await generateNonce();
 	  setCodeVerifier(state, codeVerifier);
-    console.log("saved code verifier", codeVerifier);
 	  const codeChallenge = base64URLEncode(await sha256(codeVerifier));
 
     // If no known identities in local storage, we redirect to the hosted UI for login

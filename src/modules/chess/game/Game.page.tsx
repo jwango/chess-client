@@ -3,7 +3,7 @@ import { useGetGameQuery, useGetPlayersQuery } from "../lib/chess.query";
 import { useToastState } from "@shared/lib";
 import { useEffect } from "react";
 import AuthGuard from "../../auth/components/auth-guard.component";
-import { Toast } from "@shared";
+import { Page, Toast } from "@shared";
 import { Registration } from "./Registration";
 import { useAuth } from "@auth";
 import { Play } from "./Play";
@@ -28,20 +28,11 @@ export const GamePage = () => {
   
   return <AuthGuard>
     <Toast {...toastState} />
-    <div className="gutters">
+    <Page>
       <h1>{getGameName(gameId)}</h1>
       {isLoadingData && <p>Loading...</p>}
       {!isLoadingGameInfo && gameInfo?.currentState === 'WAITING' && <Registration gameInfo={gameInfo} myPlayer={myPlayer} />}
       {!isLoadingGameInfo && gameInfo?.currentState === 'RUNNING' && <Play gameInfo={gameInfo} myPlayer={myPlayer} />}
-    </div>
+    </Page>
   </AuthGuard>
 }
-
-const DebugQuery = <T,> ({ data, isLoading }: { data: T, isLoading: boolean }) => {
-  return <div>
-    {isLoading && <p>Loading...</p>}
-    {!isLoading && data && <pre>
-      {JSON.stringify(data, null, 2)}
-    </pre>}
-  </div>;
-};

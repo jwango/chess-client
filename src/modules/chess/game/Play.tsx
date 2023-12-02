@@ -83,11 +83,11 @@ export const Play = ({ gameInfo, myPlayer }: PlayProps) => {
       {submitMoveMutation.isPending && <span>Submitting your move...</span>}
       {isReady && <p>{currentColor}&apos;s turn. {turnMessage}</p>}
     </div>
-    <div className="flex flex-row flex-wrap">
+    <div className="flex flex-row flex-wrap gap-4 w-[320px] sm:w-auto">
       <Board isBlack={isBlack} gameState={state} selectedMove={selectedMove} allowedMoves={movesBySelectedPiece} allMoves={moves} onClickSpace={handleClickSpace}/>
       <section className="flex flex-col justify-between">
         <MoveInputField moves={moves} filters={filters} onFilter={setFilters} onSelect={handleSelectInput} />
-        <div className="flex flex-row flex-wrap gap-2 justify-end items-baseline">
+        <div className="flex flex-row flex-wrap gap-2 justify-start items-baseline">
           <button type="button" className="mb-1" onClick={() => handleRefresh()} disabled={isLoadingMoves || isLoadingState}>Refresh</button>
           <button className="mt-2" type="button" disabled={!canSubmit} onClick={handleSubmit}>Submit move</button>
         </div>

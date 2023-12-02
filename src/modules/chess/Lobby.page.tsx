@@ -1,4 +1,4 @@
-import { Toast } from "@shared";
+import { Page, Toast } from "@shared";
 import AuthGuard from "../auth/components/auth-guard.component";
 import { useListGamesQuery } from "./lib/chess.query";
 import { useToastState } from "@shared/lib";
@@ -29,7 +29,7 @@ export const LobbyPage = () => {
   const isLoading = isLoadingGames || createGameMutation.isPending;
 
   return <AuthGuard>
-    <div className='gutters'>
+    <Page>
       <h1>Games {isLoading ? <>loading...</> : <>loaded</>}</h1>
       <Toast {...toastState} />
       <div className="flex flex-row gap-2 mb-2">
@@ -45,6 +45,6 @@ export const LobbyPage = () => {
           </ul>
         }
       </pre>
-    </div>
+    </Page>
   </AuthGuard>
 };

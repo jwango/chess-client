@@ -1,4 +1,14 @@
 .gutters {
-  @apply px-2;
-  @apply md:px-8;
+  @apply px-4;
+  @apply sm:px-8;
+  @apply md:px-12;
+  @apply lg:px-40;
+}
+
+.gutters-absolute-right {
+  position: absolute;
+  @apply right-4;
+  @apply sm:right-8;
+  @apply md:right-12;
+  @apply lg:right-40;
 }

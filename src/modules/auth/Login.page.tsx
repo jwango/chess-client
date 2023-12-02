@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthApi } from "./lib/auth.api";
 import { useAuth } from "./lib/useAuth.hook";
 import { getReturnToFromState } from "./lib/util";
+import { Page } from "@shared";
 
 export const LoginPage = () => {
   const [ searchParams ] = useSearchParams();
@@ -48,12 +49,12 @@ export const LoginPage = () => {
   const hasCode = getHasCode(code);
 
   // Render
-  return <div className="gutters">
+  return <Page>
     {errorMessage && <p>{errorMessage}</p>}
     {!hasCode  && <p>Redirecting you to SSO login...</p>}
     {(hasCode && !tokenData) && <p>Logging you in...</p>}
     {userInfo && <p>Welcome {userInfo.name}!</p>}
-  </div>;
+  </Page>;
 };
 
 function getHasCode(code: string): boolean {

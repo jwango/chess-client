@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useAuth } from "../lib/useAuth.hook";
 import { useLocation } from "react-router";
+import { Page } from "@shared";
 
 export const AuthGuard = ({ children }: PropsWithChildren<{}>) => {
   const { isLoggedIn, loginSilently } = useAuth();
@@ -17,7 +18,7 @@ export const AuthGuard = ({ children }: PropsWithChildren<{}>) => {
 
   return <>
     {isLoggedIn && children}
-    {!isLoggedIn && <div className="gutters">Redirecting to login...</div>}
+    {!isLoggedIn && <Page>Redirecting to login...</Page>}
   </>
 };
 
