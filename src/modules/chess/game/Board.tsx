@@ -1,5 +1,5 @@
-import { PropsWithChildren } from "react";
-import { GameMove, GamePlayer, GameSpace, GameState, PieceType } from "../lib/dto";
+import { Fragment, PropsWithChildren } from "react";
+import { GameMove, GameSpace, GameState, PieceType } from "../lib/dto";
 import { getIsPieceBlack, getPieceLetter } from "../lib/util";
 
 import styles from './Board.module.css';
@@ -17,17 +17,20 @@ interface BoardProps {
 const EMPTY_BOARD = getEmptyBoard();
 const INDICES_ASC = [0, 1, 2, 3, 4, 5, 6, 7];
 const INDICES_DESC = [7, 6, 5, 4, 3, 2, 1, 0];
+const OUTER_BG_COLOR = "bg-slate-700";
+const ACTIVE_TICK_COLOR = "text-white";
+const INACTIVE_TICK_COLOR = "text-gray-500";
 
 export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, allMoves, onClickSpace }: BoardProps) => {
   const board = gameState?.chessBoard || EMPTY_BOARD;
 
-  return <div>
-    <div className={`grid grid-cols-10 w-[400px] ${isBlack ? 'rotate-180' : ''}`}>
-      <HorizontalAxis isFlipped={true} tickClassname={isBlack ? 'text-black' : 'text-gray-300'} />
+  return <div className={`border border-black rounded-sm ${OUTER_BG_COLOR}`}>
+    <div className={`grid grid-cols-10 w-[320px] sm:w-[400px] ${isBlack ? 'rotate-180' : ''}`}>
+      <HorizontalAxis isFlipped={true} tickClassname={isBlack ? ACTIVE_TICK_COLOR : INACTIVE_TICK_COLOR} />
       {INDICES_DESC.map(row => {
         const rowPieces = board[row];
-        return <>
-          <AxisTick className={`${isBlack ? 'text-gray-300' : 'text-black'}`}>{row + 1}</AxisTick>
+        return <Fragment key={row}>
+          <AxisTick className={`${isBlack ? INACTIVE_TICK_COLOR : ACTIVE_TICK_COLOR} border-r border-black ${OUTER_BG_COLOR}`}>{row + 1}</AxisTick>
           {INDICES_ASC.map(column => {
             const isToSpace = matchesSpace(row, column, selectedMove?.toSpace);
             const isFromSpace = matchesSpace(row, column, selectedMove?.fromSpace);
@@ -45,6 +48,7 @@ export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, 
             }
 
             return <Space
+              key={`${row}${column}`}
               row={row}
               column={column}
               pieceType={rowPieces[column]}
@@ -53,10 +57,10 @@ export const Board = ({ gameState, isBlack = false, selectedMove, allowedMoves, 
               onClick={() => onClickSpace({ row, column })}
             />
           })}
-          <AxisTick className={`${isBlack ? 'text-black' : 'text-gray-300'} rotate-180`}>{row + 1}</AxisTick>
-        </>
+          <AxisTick className={`${isBlack ? ACTIVE_TICK_COLOR : INACTIVE_TICK_COLOR} rotate-180 border-r border-black ${OUTER_BG_COLOR}`}>{row + 1}</AxisTick>
+        </Fragment>
       })}
-      <HorizontalAxis tickClassname={isBlack ? 'text-gray-300' : 'text-black'} />
+      <HorizontalAxis tickClassname={isBlack ? INACTIVE_TICK_COLOR : ACTIVE_TICK_COLOR} />
     </div>
   </div>;
 };
@@ -76,14 +80,14 @@ const Space = ({ className = '', row, column, pieceType, isFlipped = false, onCl
   const isPieceBlack = getIsPieceBlack(pieceType);
   return <div
     className={
-      `h-[40px] text-3xl sm:text-4xl text-center leading-none box-border relative border-[4px] border-transparent
+      `h-[32px] sm:h-[40px] text-3xl sm:text-4xl text-center leading-none box-border relative border-[4px] border-transparent
       ${isSpaceBlack ? `bg-gray-500 ${styles.TextOutlineWhite}` : `bg-orange-50 ${styles.TextOutlineBlack}`}
       ${isFlipped ? 'rotate-180' : ''}
       ${className}`
     }
     onClick={() => onClick && onClick()}
   >
-    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-4px] top-[-4px] w-[40px] leading-[40px]`}>{getPieceLetter(pieceType) || ''}</span>
+    <span className={`${isPieceBlack ? 'text-black' : 'text-white'} m-0 absolute left-[-4px] top-[-4px] w-[32px] leading[32px] sm:w-[40px] sm:leading-[40px]`}>{getPieceLetter(pieceType) || ''}</span>
   </div>;
 };
 
@@ -93,7 +97,7 @@ interface AxisTickProps {
 }
 
 const AxisTick = ({ className, children }: PropsWithChildren<AxisTickProps>) => {
-  return <div className={`text-center leading-[40px] ${className || ''}`}>{children}</div>
+  return <div className={`text-center leading-[32px] sm:leading-[40px] ${className || ''}`}>{children}</div>
 };
 
 // HorizontalAxis component
@@ -103,12 +107,13 @@ interface HorizontalAxisProps {
 }
 
 const HorizontalAxis = ({ tickClassname, isFlipped = false }: HorizontalAxisProps) => {
+  const flippedStyleTick = isFlipped ? 'rotate-180' : '';
   return <>
-    <div>{/* empty left column */}</div>
-    {INDICES_ASC.map(column => <AxisTick className={`${isFlipped ? 'rotate-180' : ''} ${tickClassname || ''}`}>
+    <div className={OUTER_BG_COLOR}>{/* empty left column */}</div>
+    {INDICES_ASC.map(column => <AxisTick key={column} className={`${flippedStyleTick} box-border border-t border-black ${OUTER_BG_COLOR} ${tickClassname || ''} `}>
       {String.fromCharCode(97 + column)}
     </AxisTick>)}
-    <div>{/* empty right column */}</div>
+    <div className={OUTER_BG_COLOR}>{/* empty right column */}</div>
   </>
 };
 
